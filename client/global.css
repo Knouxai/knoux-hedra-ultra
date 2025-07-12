@@ -76,13 +76,32 @@
   }
 
   body {
-    @apply bg-cyber-dark text-foreground font-mono;
+    @apply bg-cyber-dark text-foreground;
+    font-family: "Orbitron", "Cairo", monospace;
     background: radial-gradient(
       ellipse at top,
       hsl(var(--cyber-dark)) 0%,
       hsl(var(--cyber-dark-secondary)) 100%
     );
     min-height: 100vh;
+  }
+
+  /* Arabic text support */
+  .font-arabic {
+    font-family: "Cairo", "Orbitron", sans-serif;
+  }
+
+  .font-cyber {
+    font-family: "Orbitron", monospace;
+  }
+
+  /* RTL support */
+  .rtl {
+    direction: rtl;
+  }
+
+  .ltr {
+    direction: ltr;
   }
 
   /* Glassmorphism utility classes */
