@@ -189,6 +189,36 @@
     z-index: -1;
     opacity: 0.1;
   }
+
+  /* Enhanced animation delays */
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-3000 {
+    animation-delay: 3s;
+  }
+
+  /* Pulsing border effect */
+  .pulse-border {
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-border {
+    0%,
+    100% {
+      border-color: hsl(var(--cyber-neon));
+      box-shadow: 0 0 10px hsl(var(--cyber-neon));
+    }
+    50% {
+      border-color: hsl(var(--cyber-neon-pink));
+      box-shadow: 0 0 20px hsl(var(--cyber-neon-pink));
+    }
+  }
 }
 
 @layer components {
