@@ -8,6 +8,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+
+// 7 Main Module Pages
+import DefensiveOps from "./pages/modules/DefensiveOps";
+import OffensiveTools from "./pages/modules/OffensiveTools";
+import Surveillance from "./pages/modules/Surveillance";
+import NetworkControl from "./pages/modules/NetworkControl";
+import AIAssistant from "./pages/modules/AIAssistant";
+import Reporting from "./pages/modules/Reporting";
+import CosmicSettings from "./pages/modules/CosmicSettings";
+
+// Legacy individual tool pages (for backwards compatibility)
 import SerpentTrap from "./pages/SerpentTrap";
 import Deterrence3D from "./pages/Deterrence3D";
 import ScriptGenerator from "./pages/ScriptGenerator";
@@ -39,7 +50,16 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Cyber Shield Modules */}
+          {/* 7 Main Cyber Modules */}
+          <Route path="/defensive-ops" element={<DefensiveOps />} />
+          <Route path="/offensive-tools" element={<OffensiveTools />} />
+          <Route path="/surveillance" element={<Surveillance />} />
+          <Route path="/network-control" element={<NetworkControl />} />
+          <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/reporting" element={<Reporting />} />
+          <Route path="/cosmic-settings" element={<CosmicSettings />} />
+
+          {/* Legacy Individual Tools (backwards compatibility) */}
           <Route path="/serpent-trap" element={<SerpentTrap />} />
           <Route path="/3d-deterrence" element={<Deterrence3D />} />
           <Route path="/script-generator" element={<ScriptGenerator />} />
