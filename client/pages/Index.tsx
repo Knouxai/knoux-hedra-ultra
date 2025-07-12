@@ -15,7 +15,7 @@ export default function Index() {
     return () => clearInterval(timer);
   }, []);
 
-  const cyberTools = [
+    const cyberTools = [
     {
       id: 1,
       name: "SerpentTrap",
@@ -141,14 +141,15 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Cyber Tools Grid */}
+                {/* Cyber Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {cyberTools.map((tool) => {
             const IconComponent = tool.icon;
             return (
-              <div
+              <Link
                 key={tool.id}
-                className="glass-card rounded-xl p-6 group cursor-pointer"
+                to={tool.path}
+                className="glass-card rounded-xl p-6 group cursor-pointer block"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform">
