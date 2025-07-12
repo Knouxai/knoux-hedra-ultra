@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Shield, Zap, Eye, Lock, Target, Activity } from "lucide-react";
+import {
+  Shield,
+  Zap,
+  Eye,
+  Network,
+  Brain,
+  FileText,
+  Settings,
+  Activity,
+  Swords,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Index() {
@@ -15,60 +25,104 @@ export default function Index() {
     return () => clearInterval(timer);
   }, []);
 
-  const cyberTools = [
+  const cyberModules = [
     {
       id: 1,
-      name: "SerpentTrap",
-      icon: Eye,
+      name: "Defensive Ops",
+      nameAr: "قسم الدفاع السيبراني",
+      icon: Shield,
       status: "ACTIVE",
-      type: "monitor",
-      description: "Process monitoring & threat detection",
-      path: "/serpent-trap",
+      type: "defense",
+      description: "7 defensive cybersecurity tools",
+      path: "/defensive-ops",
+      tools: 7,
+      color: "text-green-400",
+      bgColor: "bg-green-400/10",
+      borderColor: "border-green-400",
     },
     {
       id: 2,
-      name: "3D Deterrence",
-      icon: Shield,
+      name: "Offensive Tools",
+      nameAr: "قسم الهجوم الأخلاقي",
+      icon: Swords,
       status: "STANDBY",
-      type: "defense",
-      description: "Animated defense protocols",
-      path: "/3d-deterrence",
+      type: "attack",
+      description: "Ethical hacking and penetration testing",
+      path: "/offensive-tools",
+      tools: 7,
+      color: "text-red-400",
+      bgColor: "bg-red-400/10",
+      borderColor: "border-red-400",
     },
     {
       id: 3,
-      name: "Script Generator",
-      icon: Zap,
-      status: "READY",
-      type: "tool",
-      description: "Attack/Defense script creation",
-      path: "/script-generator",
+      name: "Surveillance",
+      nameAr: "قسم أدوات المراقبة",
+      icon: Eye,
+      status: "MONITORING",
+      type: "surveillance",
+      description: "Advanced monitoring and surveillance tools",
+      path: "/surveillance",
+      tools: 7,
+      color: "text-yellow-400",
+      bgColor: "bg-yellow-400/10",
+      borderColor: "border-yellow-400",
     },
     {
       id: 4,
-      name: "VPN Shield",
-      icon: Lock,
-      status: "DISCONNECTED",
+      name: "Net & VPN Control",
+      nameAr: "قسم إدارة الاتصال والشبكات",
+      icon: Network,
+      status: "CONNECTED",
       type: "network",
-      description: "WireGuard/OpenVPN control",
-      path: "/vpn-shield",
+      description: "Network management and VPN control",
+      path: "/network-control",
+      tools: 7,
+      color: "text-blue-400",
+      bgColor: "bg-blue-400/10",
+      borderColor: "border-blue-400",
     },
     {
       id: 5,
-      name: "System Scanner",
-      icon: Target,
-      status: "READY",
-      type: "scan",
-      description: "Full system security audit",
-      path: "/system-scanner",
+      name: "AI Cyber Assistant",
+      nameAr: "قسم التفاعل مع الذكاء الاصطناعي",
+      icon: Brain,
+      status: "LEARNING",
+      type: "ai",
+      description: "AI-powered cybersecurity assistance",
+      path: "/ai-assistant",
+      tools: 7,
+      color: "text-purple-400",
+      bgColor: "bg-purple-400/10",
+      borderColor: "border-purple-400",
     },
     {
       id: 6,
-      name: "AI Sentinel",
-      icon: Activity,
-      status: "LEARNING",
-      type: "ai",
-      description: "Intelligent threat analysis",
-      path: "/ai-sentinel",
+      name: "Encrypted Reporting",
+      nameAr: "قسم التقارير والتوثيق",
+      icon: FileText,
+      status: "READY",
+      type: "reporting",
+      description: "Secure report generation and storage",
+      path: "/reporting",
+      tools: 7,
+      color: "text-cyan-400",
+      bgColor: "bg-cyan-400/10",
+      borderColor: "border-cyan-400",
+    },
+    {
+      id: 7,
+      name: "Cosmic Settings",
+      nameAr: "قسم الإعدادات والتحكم",
+      icon: Settings,
+      status: "CONFIGURED",
+      type: "settings",
+      description: "Advanced system configuration",
+      path: "/cosmic-settings",
+      tools: 7,
+      color: "text-cyber-neon",
+      bgColor: "bg-cyber-neon/10",
+      borderColor: "border-cyber-neon",
     },
   ];
 
@@ -93,7 +147,9 @@ export default function Index() {
                 <h1 className="text-2xl lg:text-3xl font-bold text-cyber-neon neon-glow">
                   KNOX Sentinel
                 </h1>
-                <p className="text-cyber-purple-light">Cosmic Cyber Shield™</p>
+                <p className="text-cyber-purple-light">
+                  Cosmic Cyber Shield™ | الأقسام السبعة
+                </p>
               </div>
             </div>
 
@@ -121,103 +177,117 @@ export default function Index() {
           <h2 className="text-3xl lg:text-4xl font-bold text-cyber-neon neon-glow mb-4">
             Welcome to your Cyber Fortress ⚡️
           </h2>
-          <p className="text-cyber-purple-light text-lg mb-6">
-            Advanced cybersecurity command center with AI-powered threat
-            detection and response
+          <p className="text-cyber-purple-light text-lg mb-2">
+            Advanced cybersecurity command center with 7 specialized modules
+          </p>
+          <p className="text-cyber-purple-light text-base mb-6">
+            مركز قيادة أمني متقدم مع 7 وحدات متخصصة - كل وحدة تحتوي على 7 أدوات
+            دقيقة
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="btn-cyber">
               <span className="flex items-center gap-2">
                 <Shield className="w-5 h-5" />
-                Engage All Defenses
+                Engage All Modules
               </span>
             </button>
             <button className="btn-cyber mode-attack">
               <span className="flex items-center gap-2">
-                <Target className="w-5 h-5" />
-                Counterstrike Mode
+                <Activity className="w-5 h-5" />
+                Emergency Response
               </span>
             </button>
           </div>
         </div>
 
-        {/* Cyber Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {cyberTools.map((tool) => {
-            const IconComponent = tool.icon;
+        {/* Cyber Modules Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          {cyberModules.map((module) => {
+            const IconComponent = module.icon;
             return (
               <Link
-                key={tool.id}
-                to={tool.path}
-                className="glass-card rounded-xl p-6 group cursor-pointer block"
+                key={module.id}
+                to={module.path}
+                className="glass-card rounded-xl p-6 group cursor-pointer block hover:scale-105 transition-all duration-300"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-6 h-6 text-cyber-neon" />
+                  <div
+                    className={`w-12 h-12 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform ${module.bgColor} ${module.borderColor} border`}
+                  >
+                    <IconComponent className={`w-6 h-6 ${module.color}`} />
                   </div>
                   <div className="flex items-center gap-1">
                     <div
                       className={`w-2 h-2 rounded-full ${
-                        tool.status === "ACTIVE"
+                        module.status === "ACTIVE" ||
+                        module.status === "MONITORING"
                           ? "bg-green-400 animate-pulse"
-                          : tool.status === "LEARNING"
+                          : module.status === "LEARNING"
                             ? "bg-yellow-400 animate-pulse"
-                            : tool.status === "DISCONNECTED"
-                              ? "bg-red-400"
+                            : module.status === "CONNECTED"
+                              ? "bg-blue-400 animate-pulse"
                               : "bg-cyber-neon"
                       }`}
                     ></div>
                     <span className="text-xs font-mono text-cyber-purple-light">
-                      {tool.status}
+                      {module.status}
                     </span>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-cyber-neon mb-2">
-                  {tool.name}
+                <h3 className={`text-lg font-bold ${module.color} mb-1`}>
+                  {module.name}
                 </h3>
+                <h4 className="text-sm text-cyber-purple-light mb-3 font-mono">
+                  {module.nameAr}
+                </h4>
                 <p className="text-cyber-purple-light text-sm mb-4">
-                  {tool.description}
+                  {module.description}
                 </p>
 
-                <div className="flex gap-2">
-                  <button className="btn-cyber text-xs px-3 py-1.5 mode-defense">
-                    Defend
-                  </button>
-                  <button className="btn-cyber text-xs px-3 py-1.5 mode-attack">
-                    Attack
-                  </button>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-cyber-purple-light">
+                      Tools:
+                    </span>
+                    <span className={`text-sm font-bold ${module.color}`}>
+                      {module.tools}
+                    </span>
+                  </div>
+                  <div
+                    className={`text-xs px-2 py-1 rounded-full ${module.bgColor} ${module.color} border ${module.borderColor}`}
+                  >
+                    Module {module.id}
+                  </div>
                 </div>
               </Link>
             );
           })}
         </div>
 
-        {/* Quick Stats */}
+        {/* System Status */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="glass-card rounded-xl p-4 text-center">
             <div className="text-2xl font-bold text-cyber-neon neon-glow">
-              24/7
+              7
             </div>
-            <div className="text-cyber-purple-light text-sm">System Uptime</div>
+            <div className="text-cyber-purple-light text-sm">
+              Active Modules
+            </div>
           </div>
           <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-green-400">0</div>
-            <div className="text-cyber-purple-light text-sm">
-              Active Threats
-            </div>
+            <div className="text-2xl font-bold text-green-400">49</div>
+            <div className="text-cyber-purple-light text-sm">Total Tools</div>
           </div>
           <div className="glass-card rounded-xl p-4 text-center">
             <div className="text-2xl font-bold text-cyber-neon neon-glow">
-              156
+              AI
             </div>
-            <div className="text-cyber-purple-light text-sm">
-              Blocked Attempts
-            </div>
+            <div className="text-cyber-purple-light text-sm">Enhanced</div>
           </div>
           <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-400">AI</div>
-            <div className="text-cyber-purple-light text-sm">Mode Active</div>
+            <div className="text-2xl font-bold text-yellow-400">∞</div>
+            <div className="text-cyber-purple-light text-sm">Cyber Power</div>
           </div>
         </div>
       </main>
@@ -229,6 +299,9 @@ export default function Index() {
             <span className="text-cyber-neon font-bold">KNOX Sentinel</span> |
             Cosmic Cyber Shield™ v1.0 Alpha |
             <span className="font-mono">knoux7-core</span> 💎
+          </p>
+          <p className="text-cyber-purple-light text-xs mt-1">
+            الأقسام السبعة - Seven Modules of Cyber Excellence
           </p>
         </div>
       </footer>
