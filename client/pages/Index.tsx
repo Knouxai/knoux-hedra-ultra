@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Shield, Zap, Eye, Lock, Target, Activity } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Index() {
   const [currentTime, setCurrentTime] = useState(new Date());
