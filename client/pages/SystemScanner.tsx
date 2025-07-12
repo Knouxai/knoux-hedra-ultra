@@ -1,5 +1,44 @@
-import { ArrowLeft, Target } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Zap, Trash2, Cpu, Power, RefreshCcw } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const tools = [
+  {
+    name: "Full Scan",
+    description: "فحص شامل لكل الملفات، العمليات، المنافذ، والخدمات.",
+    icon: <ShieldCheck className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Running Full Scan...")
+  },
+  {
+    name: "Rootkit Checker",
+    description: "كشف البرمجيات الخبيثة المخفية والمتجذّرة في النظام.",
+    icon: <Zap className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Checking for rootkits...")
+  },
+  {
+    name: "RAM Purge",
+    description: "تحرير الذاكرة العشوائية وتسريع النظام مباشرة.",
+    icon: <Cpu className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Purging RAM...")
+  },
+  {
+    name: "Junk Cleaner",
+    description: "حذف الملفات المؤقتة والمهملة لتحرير المساحة.",
+    icon: <Trash2 className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Cleaning junk files...")
+  },
+  {
+    name: "Startup Optimizer",
+    description: "إدارة وتحسين عناصر بدء التشغيل لتسريع الإقلاع.",
+    icon: <Power className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Optimizing startup items...")
+  },
+  {
+    name: "Refresh Services",
+    description: "إعادة تهيئة الخدمات لتسريع النظام واستقراره.",
+    icon: <RefreshCcw className="w-6 h-6 text-cyber-neon" />,
+    action: () => alert("Refreshing services...")
+  }
+];
 
 export default function SystemScanner() {
   return (
@@ -14,33 +53,41 @@ export default function SystemScanner() {
               <ArrowLeft className="w-5 h-5 text-cyber-neon" />
             </Link>
             <div className="w-12 h-12 rounded-xl glass-cyber flex items-center justify-center">
-              <Target className="w-6 h-6 text-cyber-neon animate-glow-pulse" />
+              <ShieldCheck className="w-6 h-6 text-cyber-neon animate-glow-pulse" />
             </div>
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold text-cyber-neon neon-glow">
-                System Scanner
+                محرك التحسين والتنظيف الفائق
               </h1>
               <p className="text-cyber-purple-light">
-                Full System Security Audit
+                أدوات ذكية لتحسين وتسريع النظام بأمان
               </p>
             </div>
           </div>
         </div>
       </header>
       <main className="p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="glass-card rounded-xl p-8 text-center">
-            <h2 className="text-xl font-bold text-cyber-neon mb-4">
-              System Scanner
-            </h2>
-            <p className="text-cyber-purple-light mb-6">
-              Comprehensive system security scanning and analysis coming soon...
-            </p>
-            <div className="w-32 h-32 mx-auto bg-cyber-dark rounded-xl flex items-center justify-center mb-6">
-              <Target className="w-16 h-16 text-cyber-neon animate-glow-pulse" />
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {tools.map((tool, idx) => (
+            <div
+              key={idx}
+              className="glass-card p-6 rounded-xl shadow-lg flex flex-col items-center text-center hover:scale-105 transition-transform"
+            >
+              <div className="mb-4">{tool.icon}</div>
+              <h3 className="text-lg font-bold text-cyber-neon mb-2">
+                {tool.name}
+              </h3>
+              <p className="text-sm text-cyber-purple-light mb-4">
+                {tool.description}
+              </p>
+              <button
+                onClick={tool.action}
+                className="btn-cyber w-full mt-auto"
+              >
+                تنفيذ الآن
+              </button>
             </div>
-            <button className="btn-cyber">Start Full Scan</button>
-          </div>
+          ))}
         </div>
       </main>
     </div>
