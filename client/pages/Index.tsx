@@ -1,21 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  Shield,
-  Zap,
-  Eye,
-  Network,
-  Brain,
-  FileText,
-  Settings,
-  Activity,
-  Swords,
-} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Index() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [systemStatus, setSystemStatus] = useState("ONLINE");
-  const [threatLevel, setThreatLevel] = useState("SECURE");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,286 +12,464 @@ export default function Index() {
     return () => clearInterval(timer);
   }, []);
 
-  const cyberModules = [
-    {
-      id: 1,
-      name: "Defensive Ops",
-      nameAr: "قسم الدفاع السيبراني",
-      icon: Shield,
-      status: "ACTIVE",
-      type: "defense",
-      description: "7 defensive cybersecurity tools",
-      path: "/defensive-ops",
-      tools: 7,
-      color: "text-green-400",
-      bgColor: "bg-green-400/10",
-      borderColor: "border-green-400",
-    },
-    {
-      id: 2,
-      name: "Offensive Tools",
-      nameAr: "قسم الهجوم الأخلاقي",
-      icon: Swords,
-      status: "STANDBY",
-      type: "attack",
-      description: "Ethical hacking and penetration testing",
-      path: "/offensive-tools",
-      tools: 7,
-      color: "text-red-400",
-      bgColor: "bg-red-400/10",
-      borderColor: "border-red-400",
-    },
-    {
-      id: 3,
-      name: "Surveillance",
-      nameAr: "قسم أدوات المراقبة",
-      icon: Eye,
-      status: "MONITORING",
-      type: "surveillance",
-      description: "Advanced monitoring and surveillance tools",
-      path: "/surveillance",
-      tools: 7,
-      color: "text-yellow-400",
-      bgColor: "bg-yellow-400/10",
-      borderColor: "border-yellow-400",
-    },
-    {
-      id: 4,
-      name: "Net & VPN Control",
-      nameAr: "قسم إدارة الاتصال والشبكات",
-      icon: Network,
-      status: "CONNECTED",
-      type: "network",
-      description: "Network management and VPN control",
-      path: "/network-control",
-      tools: 7,
-      color: "text-blue-400",
-      bgColor: "bg-blue-400/10",
-      borderColor: "border-blue-400",
-    },
-    {
-      id: 5,
-      name: "AI Cyber Assistant",
-      nameAr: "قسم التفاعل مع الذكاء الاصطناعي",
-      icon: Brain,
-      status: "LEARNING",
-      type: "ai",
-      description: "AI-powered cybersecurity assistance",
-      path: "/ai-assistant",
-      tools: 7,
-      color: "text-purple-400",
-      bgColor: "bg-purple-400/10",
-      borderColor: "border-purple-400",
-    },
-    {
-      id: 6,
-      name: "Encrypted Reporting",
-      nameAr: "قسم التقارير والتوثيق",
-      icon: FileText,
-      status: "READY",
-      type: "reporting",
-      description: "Secure report generation and storage",
-      path: "/reporting",
-      tools: 7,
-      color: "text-cyan-400",
-      bgColor: "bg-cyan-400/10",
-      borderColor: "border-cyan-400",
-    },
-    {
-      id: 7,
-      name: "Cosmic Settings",
-      nameAr: "قسم الإعدادات والتحكم",
-      icon: Settings,
-      status: "CONFIGURED",
-      type: "settings",
-      description: "Advanced system configuration",
-      path: "/cosmic-settings",
-      tools: 7,
-      color: "text-cyber-neon",
-      bgColor: "bg-cyber-neon/10",
-      borderColor: "border-cyber-neon",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-cyber-dark cyber-grid">
-      {/* Animated background particles */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-cyber-neon rounded-full animate-float opacity-60"></div>
-        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-cyber-neon-pink rounded-full animate-float animation-delay-1000 opacity-40"></div>
-        <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyber-neon-blue rounded-full animate-float animation-delay-2000 opacity-50"></div>
-      </div>
+    <div
+      className="min-h-screen p-6"
+      style={{
+        fontFamily: "Orbitron, monospace",
+        backgroundColor: "#000000",
+        color: "#0ff",
+      }}
+    >
+      {/* Container with neon glow effect */}
+      <main
+        className="max-w-6xl mx-auto p-6 rounded-2xl"
+        style={{
+          backgroundColor: "#0a0a0a",
+          boxShadow: "0 0 10px #00e5ff, inset 0 0 20px #0ff",
+        }}
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h1
+            className="text-4xl font-extrabold text-center tracking-widest select-none"
+            style={{
+              color: "#0ff",
+              textShadow:
+                "0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff",
+              letterSpacing: "0.15em",
+            }}
+          >
+            الأقسام السبعة (Modules)
+          </h1>
 
-      {/* Header */}
-      <header className="relative z-10 p-6">
-        <div className="glass-cyber rounded-2xl p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl glass-cyber flex items-center justify-center">
-                <Shield className="w-6 h-6 text-cyber-neon animate-glow-pulse" />
-              </div>
-              <div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-cyber-neon neon-glow">
-                  KNOX Sentinel
-                </h1>
-                <p className="text-cyber-purple-light">
-                  Cosmic Cyber Shield™ | الأقسام السبعة
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-green-400 font-mono">{systemStatus}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-cyber-neon rounded-full animate-pulse"></div>
-                <span className="text-cyber-neon font-mono">{threatLevel}</span>
-              </div>
-              <div className="text-cyber-purple-light font-mono">
-                {currentTime.toLocaleTimeString()}
-              </div>
-            </div>
+          <div
+            className="text-sm font-mono"
+            style={{
+              color: "#e0f7fa",
+              textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+            }}
+          >
+            {currentTime.toLocaleTimeString("ar-SA")}
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 p-6">
-        {/* Welcome Message */}
-        <div className="glass-cyber rounded-2xl p-8 mb-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-cyber-neon neon-glow mb-4">
-            Welcome to your Cyber Fortress ⚡️
+        {/* Knox Sentinel Branding */}
+        <div className="text-center mb-8">
+          <h2
+            className="text-2xl font-bold mb-2"
+            style={{
+              color: "#d32fff",
+              textShadow: "0 0 5px #d32fff, 0 0 10px #d32fff, 0 0 20px #d32fff",
+            }}
+          >
+            KNOX Sentinel | Cosmic Cyber Shield™
           </h2>
-          <p className="text-cyber-purple-light text-lg mb-2">
-            Advanced cybersecurity command center with 7 specialized modules
+          <p
+            className="text-sm"
+            style={{
+              color: "#e0f7fa",
+              textShadow: "0 0 3px #0ff",
+            }}
+          >
+            مركز الأمان السيبراني المتقدم - knoux7-core
           </p>
-          <p className="text-cyber-purple-light text-base mb-6">
-            مركز قيادة أمني متقدم مع 7 وحدات متخصصة - كل وحدة تحتوي على 7 أدوات
-            دقيقة
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="btn-cyber">
-              <span className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                Engage All Modules
-              </span>
-            </button>
-            <button className="btn-cyber mode-attack">
-              <span className="flex items-center gap-2">
-                <Activity className="w-5 h-5" />
-                Emergency Response
-              </span>
-            </button>
-          </div>
         </div>
 
-        {/* Cyber Modules Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {cyberModules.map((module) => {
-            const IconComponent = module.icon;
-            return (
-              <Link
-                key={module.id}
-                to={module.path}
-                className="glass-card rounded-xl p-6 group cursor-pointer block hover:scale-105 transition-all duration-300"
+        {/* Modules Grid */}
+        <div
+          className="grid gap-8 mb-8"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          }}
+        >
+          {/* Module 1: Defensive Ops */}
+          <Link to="/defensive-ops">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div
-                    className={`w-12 h-12 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform ${module.bgColor} ${module.borderColor} border`}
+                1️⃣ قسم الدفاع السيبراني (Defensive Ops)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  { icon: "🔰", text: "فحص الخدمات النشطة" },
+                  { icon: "🛡️", text: "حماية منافذ النظام Ports Shield" },
+                  {
+                    icon: "🧬",
+                    text: "تحليل العمليات الجارية (Process Monitor)",
+                  },
+                  {
+                    icon: "🧯",
+                    text: "منع البرمجيات الضارة (Real-time Blocker)",
+                  },
+                  { icon: "🔐", text: "إدارة كلمات المرور VaultPass™" },
+                  { icon: "🗜️", text: "تشفير التقارير والمجلدات AES512" },
+                  {
+                    icon: "🚨",
+                    text: "نظام تنبيه مباشر عند التهديد (Sentinel Alerts)",
+                  },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
                   >
-                    <IconComponent className={`w-6 h-6 ${module.color}`} />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        module.status === "ACTIVE" ||
-                        module.status === "MONITORING"
-                          ? "bg-green-400 animate-pulse"
-                          : module.status === "LEARNING"
-                            ? "bg-yellow-400 animate-pulse"
-                            : module.status === "CONNECTED"
-                              ? "bg-blue-400 animate-pulse"
-                              : "bg-cyber-neon"
-                      }`}
-                    ></div>
-                    <span className="text-xs font-mono text-cyber-purple-light">
-                      {module.status}
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
                     </span>
-                  </div>
-                </div>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
 
-                <h3 className={`text-lg font-bold ${module.color} mb-1`}>
-                  {module.name}
-                </h3>
-                <h4 className="text-sm text-cyber-purple-light mb-3 font-mono">
-                  {module.nameAr}
-                </h4>
-                <p className="text-cyber-purple-light text-sm mb-4">
-                  {module.description}
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-cyber-purple-light">
-                      Tools:
-                    </span>
-                    <span className={`text-sm font-bold ${module.color}`}>
-                      {module.tools}
-                    </span>
-                  </div>
-                  <div
-                    className={`text-xs px-2 py-1 rounded-full ${module.bgColor} ${module.color} border ${module.borderColor}`}
+          {/* Module 2: Offensive Tools */}
+          <Link to="/offensive-tools">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                2️⃣ قسم الهجوم الأخلاقي (Offensive Tools)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  { icon: "🧨", text: "ماسح الثغرات الذكي (AutoRecon)" },
+                  { icon: "🕷️", text: "Sniffer & Packet Interceptor" },
+                  { icon: "💣", text: "توليد سكربتات هجوم تلقائية" },
+                  { icon: "🎯", text: "استهداف WiFi/APs واختبار الاختراق" },
+                  { icon: "🛰️", text: "أدوات OSINT للبحث العميق" },
+                  { icon: "🎭", text: "انتحال MAC/ARP/Spoof" },
+                  { icon: "🧪", text: "استغلال الثغرات المعروفة CVEs" },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
                   >
-                    Module {module.id}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
+
+          {/* Module 3: Surveillance */}
+          <Link to="/surveillance">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                3️⃣ قسم أدوات المراقبة (Surveillance)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  {
+                    icon: "🔎",
+                    text: "مراقبة النظام بالكامل (System Watchdog)",
+                  },
+                  { icon: "👁️‍🗨️", text: "مراقبة الشبكة الحية" },
+                  { icon: "📂", text: "تتبع فتح الملفات / السجلات" },
+                  { icon: "🛠️", text: "مراقبة أدوات الطرف الثالث" },
+                  { icon: "🔐", text: "كشف محاولات الدخول الغير مصرح" },
+                  { icon: "📡", text: "مراقبة الكاميرا/الميكروفون (إن وجدت)" },
+                  {
+                    icon: "📊",
+                    text: "تسجيل نشاط المستخدم بصمت (Optional Logging)",
+                  },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
+                  >
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
+
+          {/* Module 4: Network & VPN Control */}
+          <Link to="/network-control">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                4️⃣ قسم إدارة الاتصال والشبكات (Net & VPN Control)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  { icon: "🕸️", text: "رسم خريطة الشبكة" },
+                  { icon: "🛰️", text: "تفعيل VPN داخلي (WireGuard / OpenVPN)" },
+                  { icon: "🔧", text: "أدوات DNS Leak Check" },
+                  { icon: "🔦", text: "اكتشاف اتصال مشبوه أو Proxies" },
+                  { icon: "📶", text: "اختبار السرعة والتحميل" },
+                  { icon: "🗼", text: "حماية الشبكة المحلية LAN Defender" },
+                  { icon: "🌍", text: "WebRTC Leak Blocker" },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
+                  >
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
+
+          {/* Module 5: AI Cyber Assistant */}
+          <Link to="/ai-assistant">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                5️⃣ قسم التفاعل مع الذكاء الاصطناعي (AI Cyber Assistant)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  {
+                    icon: "🧠",
+                    text: "توليد سكربت من وصف بسيط (Knoux ScriptGen)",
+                  },
+                  { icon: "🤖", text: "توصية بالأدوات الأنسب للهجمة/الدفاع" },
+                  { icon: "📝", text: "تحليل ملف وشرح الثغرات الموجودة فيه" },
+                  { icon: "💬", text: "محادثة أمنية مع ChatKnox AI" },
+                  { icon: "📜", text: "اقتراح إعدادات أفضل لحماية النظام" },
+                  { icon: "🧩", text: "استدعاء YOLO/Whisper لفحص صور/صوت" },
+                  { icon: "🧠", text: "دعم الأوامر الصوتية للأدوات" },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
+                  >
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
+
+          {/* Module 6: Encrypted Reporting */}
+          <Link to="/reporting">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                6️⃣ قسم التقارير والتوثيق (Encrypted Reporting)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  { icon: "📥", text: "توليد تقارير PDF مشفرة" },
+                  { icon: "🧾", text: "تقرير مفصل لكل عملية هجوم/دفاع" },
+                  { icon: "🧬", text: "إضافة توقيع knoux على كل تقرير" },
+                  { icon: "⏱️", text: "عرض المدة + النتائج + النسبة" },
+                  { icon: "🔒", text: "حماية التقارير بكلمة مرور رئيسية" },
+                  {
+                    icon: "🔁",
+                    text: "إرسال نسخة للتخزين المحلي أو السحابي (اختياري)",
+                  },
+                  { icon: "📂", text: "إدارة أرشيف التقارير" },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
+                  >
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
+
+          {/* Module 7: Cosmic Settings */}
+          <Link to="/cosmic-settings">
+            <section className="hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <h2
+                className="text-lg font-semibold mb-2 select-none"
+                style={{
+                  color: "#ff2fff",
+                  textShadow: "0 0 5px #ff2fff, 0 0 10px #ff2fff",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                7️⃣ قسم الإعدادات والتحكم (Cosmic Settings)
+              </h2>
+              <ul className="space-y-2">
+                {[
+                  { icon: "🎨", text: "تخصيص الواجهة بالكامل" },
+                  { icon: "🌑", text: "الوضع الليلي/النهاري" },
+                  { icon: "🔔", text: "إدارة التنبيهات (صوت/ضوء/تفاعل)" },
+                  { icon: "🧪", text: "تفعيل أدوات محددة حسب الحالة" },
+                  {
+                    icon: "🛠️",
+                    text: "إعدادات حماية متقدمة (جدار ناري داخلي)",
+                  },
+                  { icon: "👑", text: "تغيير صلاحيات الوصول للأدوات" },
+                  {
+                    icon: "🧠",
+                    text: "اختيار موديل الذكاء الاصطناعي المستخدم",
+                  },
+                ].map((tool, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center space-x-2 rtl:space-x-reverse text-sm select-none"
+                    style={{
+                      color: "#e0f7fa",
+                      textShadow: "0 0 3px #0ff, 0 0 5px #0ff",
+                    }}
+                  >
+                    <span
+                      className="text-xl flex-shrink-0"
+                      style={{ color: "#ff2fff" }}
+                    >
+                      {tool.icon}
+                    </span>
+                    <span>{tool.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Link>
         </div>
 
-        {/* System Status */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyber-neon neon-glow">
-              7
-            </div>
-            <div className="text-cyber-purple-light text-sm">
-              Active Modules
-            </div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-green-400">49</div>
-            <div className="text-cyber-purple-light text-sm">Total Tools</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyber-neon neon-glow">
-              AI
-            </div>
-            <div className="text-cyber-purple-light text-sm">Enhanced</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-400">∞</div>
-            <div className="text-cyber-purple-light text-sm">Cyber Power</div>
-          </div>
+        {/* Footer */}
+        <div className="text-center">
+          <p
+            className="text-sm"
+            style={{
+              color: "#e0f7fa",
+              textShadow: "0 0 3px #0ff",
+            }}
+          >
+            <span
+              style={{
+                color: "#d32fff",
+                fontWeight: "bold",
+                textShadow: "0 0 5px #d32fff",
+              }}
+            >
+              KNOX Sentinel
+            </span>{" "}
+            | Cosmic Cyber Shield™ v1.0 Alpha | knoux7-core 💎
+          </p>
+          <p
+            className="text-xs mt-2"
+            style={{
+              color: "#b13fff",
+            }}
+          >
+            "Welcome to your Cyber Fortress ⚡️" - مرحباً بك في قلعتك السيبرانية
+          </p>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 p-6 mt-8">
-        <div className="glass-cyber rounded-xl p-4 text-center">
-          <p className="text-cyber-purple-light text-sm">
-            <span className="text-cyber-neon font-bold">KNOX Sentinel</span> |
-            Cosmic Cyber Shield™ v1.0 Alpha |
-            <span className="font-mono">knoux7-core</span> 💎
-          </p>
-          <p className="text-cyber-purple-light text-xs mt-1">
-            الأقسام السبعة - Seven Modules of Cyber Excellence
-          </p>
-        </div>
-      </footer>
+      {/* Global styles */}
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .modules-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        /* Hide scrollbar for better look */
+        ::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* RTL support */
+        [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+          --tw-space-x-reverse: 1;
+          margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+          margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+        }
+      `}</style>
     </div>
   );
 }
