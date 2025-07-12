@@ -23,6 +23,7 @@ export default function Index() {
       status: "ACTIVE",
       type: "monitor",
       description: "Process monitoring & threat detection",
+      path: "/serpent-trap",
     },
     {
       id: 2,
@@ -31,6 +32,7 @@ export default function Index() {
       status: "STANDBY",
       type: "defense",
       description: "Animated defense protocols",
+      path: "/3d-deterrence",
     },
     {
       id: 3,
@@ -39,6 +41,7 @@ export default function Index() {
       status: "READY",
       type: "tool",
       description: "Attack/Defense script creation",
+      path: "/script-generator",
     },
     {
       id: 4,
@@ -47,6 +50,7 @@ export default function Index() {
       status: "DISCONNECTED",
       type: "network",
       description: "WireGuard/OpenVPN control",
+      path: "/vpn-shield",
     },
     {
       id: 5,
@@ -55,6 +59,7 @@ export default function Index() {
       status: "READY",
       type: "scan",
       description: "Full system security audit",
+      path: "/system-scanner",
     },
     {
       id: 6,
@@ -63,6 +68,7 @@ export default function Index() {
       status: "LEARNING",
       type: "ai",
       description: "Intelligent threat analysis",
+      path: "/ai-sentinel",
     },
   ];
 
