@@ -761,7 +761,7 @@ export default function Index() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes twinkle {
           0%,
           100% {
