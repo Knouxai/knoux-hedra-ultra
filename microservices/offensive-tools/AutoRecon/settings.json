@@ -1,0 +1,118 @@
+{
+  "tool": "AutoRecon",
+  "version": "1.0.0",
+  "module": "offensive-tools",
+  "category": "reconnaissance",
+  "riskLevel": "medium",
+  "configuration": {
+    "scanning": {
+      "defaultTarget": "127.0.0.1",
+      "defaultScanType": "quick",
+      "timeout": 300,
+      "maxConcurrentScans": 5,
+      "enableServiceDetection": true,
+      "enableVulnerabilityAssessment": true
+    },
+    "ports": {
+      "quickScan": [
+        21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 993, 995, 1723,
+        3306, 3389, 5432, 5900, 8080
+      ],
+      "commonScan": [
+        21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 993, 995, 1723,
+        3306, 3389, 5432, 5900, 8080, 8443, 9000, 9001, 9999, 10000
+      ],
+      "fullScanRange": {
+        "start": 1,
+        "end": 65535
+      }
+    },
+    "nmap": {
+      "timing": "T4",
+      "enableOSDetection": true,
+      "enableVersionDetection": true,
+      "enableScriptScanning": true,
+      "customScripts": ["banner", "vuln", "safe"],
+      "maxRetries": 3
+    },
+    "output": {
+      "saveResults": true,
+      "outputDirectory": "./scans",
+      "generateJSON": true,
+      "generateTXT": true,
+      "generateXML": false,
+      "compressOldScans": true,
+      "retentionDays": 30
+    },
+    "security": {
+      "enableRateLimiting": true,
+      "maxRequestsPerMinute": 100,
+      "enableTargetValidation": true,
+      "allowPrivateNetworks": true,
+      "allowPublicNetworks": false,
+      "requiredPermissions": ["network_scan", "vulnerability_assessment"]
+    },
+    "notifications": {
+      "enableAlerts": true,
+      "alertOnHighVulnerabilities": true,
+      "alertOnUnauthorizedScans": true,
+      "webhookURL": "",
+      "emailNotifications": false
+    }
+  },
+  "vulnerabilityDatabase": {
+    "enableCVECheck": true,
+    "cveSourceURL": "https://cve.mitre.org/data/downloads/",
+    "updateFrequency": "daily",
+    "lastUpdate": null,
+    "customRules": []
+  },
+  "serviceDetection": {
+    "enableBannerGrabbing": true,
+    "bannerTimeout": 5,
+    "enableFingerprintMatching": true,
+    "customFingerprints": [],
+    "enableSSLAnalysis": true
+  },
+  "reporting": {
+    "includeHostDiscovery": true,
+    "includePortScan": true,
+    "includeServiceDetection": true,
+    "includeVulnerabilityAssessment": true,
+    "includeRecommendations": true,
+    "riskCalculation": {
+      "lowThreshold": 2,
+      "mediumThreshold": 5,
+      "highThreshold": 10
+    }
+  },
+  "platform": {
+    "windows": {
+      "executable": "run.ps1",
+      "shell": "powershell.exe",
+      "requiredModules": ["PowerShellGet", "PackageManagement"],
+      "nmapPath": "nmap.exe"
+    },
+    "linux": {
+      "executable": "run.sh",
+      "shell": "/bin/bash",
+      "requiredPackages": ["nmap", "netcat", "dnsutils"],
+      "nmapPath": "/usr/bin/nmap"
+    }
+  },
+  "metadata": {
+    "author": "KNOUX7 Cyber Team",
+    "description": "Advanced vulnerability scanner and reconnaissance tool",
+    "tags": [
+      "reconnaissance",
+      "port-scanning",
+      "vulnerability-assessment",
+      "network-discovery"
+    ],
+    "license": "KNOUX7 Commercial License",
+    "documentation": "https://knoux7.com/docs/autorecon",
+    "supportContact": "support@knoux7.com"
+  },
+  "lastModified": "2024-01-15T12:00:00Z",
+  "configVersion": "1.0.0"
+}
