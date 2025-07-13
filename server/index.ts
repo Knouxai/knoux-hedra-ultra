@@ -34,7 +34,10 @@ export function createServer() {
   // Offensive tools endpoints
   app.use("/api", offensiveToolsRouter);
 
-  // إضافة خدمة WebSocket إلى التطبيق للوصول إليها من الطرق الأخرى
+  // Digital forensics endpoints
+  app.use("/api", forensicsRouter);
+
+  // إضافة خدمة WebSocket إلى التطبيق للوصول إليها من الطرق ��لأخرى
   app.locals.wsService = wsService;
 
   return httpServer;
