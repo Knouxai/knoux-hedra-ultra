@@ -1,117 +1,74 @@
 {
-  "name": "AutoRecon",
+  "tool": "AutoRecon",
   "status": "READY",
-  "risk": "MEDIUM",
-  "lastExecuted": null,
-  "lastUpdated": "2024-01-15T12:00:00Z",
-  "version": "1.0.0",
-  "module": "offensive-tools",
-  "category": "reconnaissance",
-  "platform": "cross-platform",
+  "lastUpdate": "2024-01-20T12:00:00Z",
   "health": {
-    "operational": true,
-    "dependencies": {
-      "nmap": "required",
-      "netcat": "optional",
-      "dig": "optional",
-      "powershell": "windows-only",
-      "bash": "linux-only"
-    },
-    "lastHealthCheck": "2024-01-15T12:00:00Z",
-    "healthStatus": "healthy"
-  },
-  "execution": {
-    "totalExecutions": 0,
-    "successfulExecutions": 0,
-    "failedExecutions": 0,
-    "averageExecutionTime": 0,
-    "lastExecutionResult": null,
-    "currentlyRunning": false,
-    "runningProcesses": []
-  },
-  "statistics": {
-    "targetsScanned": 0,
-    "vulnerabilitiesFound": 0,
-    "openPortsDiscovered": 0,
-    "servicesIdentified": 0,
-    "reportsGenerated": 0
-  },
-  "capabilities": {
-    "hostDiscovery": true,
-    "portScanning": true,
-    "serviceDetection": true,
-    "vulnerabilityAssessment": true,
-    "bannerGrabbing": true,
-    "osDetection": true,
-    "scriptScanning": true,
-    "reportGeneration": true,
-    "realTimeScanning": false,
-    "bulkScanning": true
-  },
-  "configuration": {
-    "configValid": true,
-    "settingsFile": "settings.json",
-    "lastConfigUpdate": "2024-01-15T12:00:00Z",
-    "customRulesLoaded": 0,
-    "vulnerabilityDbLoaded": false
-  },
-  "security": {
-    "permissions": ["network_scan", "vulnerability_assessment"],
-    "auditLog": true,
-    "encryptedStorage": false,
-    "accessControl": true,
-    "rateLimit": {
-      "enabled": true,
-      "requestsPerMinute": 100
+    "overall": "HEALTHY",
+    "components": {
+      "portScanner": "OPERATIONAL",
+      "serviceEnum": "OPERATIONAL",
+      "vulnAssessment": "OPERATIONAL",
+      "reporting": "OPERATIONAL"
     }
   },
-  "output": {
-    "lastReportPath": null,
-    "reportsDirectory": "./scans",
-    "supportedFormats": ["JSON", "TXT", "XML"],
-    "compressionEnabled": true,
-    "retentionPolicy": "30 days"
+  "metrics": {
+    "totalScansCompleted": 0,
+    "totalTargetsScanned": 0,
+    "totalVulnerabilitiesFound": 0,
+    "averageScanDuration": 0,
+    "lastScanDuration": 0,
+    "successRate": 100
   },
-  "monitoring": {
-    "metricsEnabled": true,
-    "loggingLevel": "INFO",
-    "performanceTracking": true,
-    "alertsEnabled": true,
-    "webhookConfigured": false
+  "currentScan": {
+    "isRunning": false,
+    "target": null,
+    "startTime": null,
+    "expectedEndTime": null,
+    "progress": 0,
+    "phase": null
   },
-  "integration": {
-    "apiEndpoints": [
-      "/api/AutoRecon/run",
-      "/api/AutoRecon/update",
-      "/api/AutoRecon/settings",
-      "/api/AutoRecon/status"
-    ],
-    "webhookSupport": true,
-    "cliInterface": true,
-    "webInterface": false,
-    "apiVersion": "1.0.0"
+  "lastScan": {
+    "target": null,
+    "completedAt": null,
+    "duration": 0,
+    "status": null,
+    "vulnerabilitiesFound": 0,
+    "portsScanned": 0
   },
-  "troubleshooting": {
-    "commonIssues": [
-      {
-        "issue": "Nmap not found",
-        "solution": "Install Nmap from https://nmap.org/download.html",
-        "severity": "critical"
-      },
-      {
-        "issue": "Permission denied for port scanning",
-        "solution": "Run with administrator/root privileges or adjust firewall settings",
-        "severity": "high"
-      },
-      {
-        "issue": "Target unreachable",
-        "solution": "Check network connectivity and firewall rules",
-        "severity": "medium"
-      }
-    ],
-    "debugMode": false,
-    "verboseLogging": false
+  "capabilities": {
+    "portScanning": true,
+    "serviceEnumeration": true,
+    "osDetection": true,
+    "vulnerabilityAssessment": true,
+    "webScanning": true,
+    "reportGeneration": true,
+    "multiTarget": false,
+    "customScripts": true
   },
-  "signature": "KNOUX7-KOTS™",
-  "timestamp": "2024-01-15T12:00:00Z"
+  "limitations": {
+    "maxConcurrentScans": 1,
+    "requiresInternet": false,
+    "requiresElevatedPrivileges": false,
+    "platformSpecific": false
+  },
+  "security": {
+    "targetValidation": true,
+    "outputSanitization": true,
+    "logSecurity": true,
+    "dataEncryption": false
+  },
+  "environment": {
+    "platform": "cross-platform",
+    "architecture": "x64",
+    "privileges": "user",
+    "networkAccess": true,
+    "toolsAvailable": {
+      "nmap": false,
+      "netcat": false,
+      "curl": false
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "lastError": null
 }
