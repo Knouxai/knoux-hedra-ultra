@@ -24,5 +24,8 @@ export function createServer() {
   // Surveillance and monitoring endpoints
   app.use("/api", surveillanceRouter);
 
+  // Offensive tools endpoints
+  app.use("/api", offensiveToolsRouter);
+
   return app;
 }
