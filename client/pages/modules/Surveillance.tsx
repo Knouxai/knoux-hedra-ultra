@@ -125,7 +125,7 @@ export default function Surveillance() {
           const data = await response.json();
           setSystemStats(data);
         } else {
-          // محاكاة البيانات في حالة عدم توفر API
+          // محا��اة البيانات في حالة عدم توفر API
           setSystemStats({
             cpu: Math.random() * 100,
             memory: Math.random() * 100,
@@ -408,29 +408,19 @@ export default function Surveillance() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-400 mb-4">{tool.description}</p>
-                <div className="flex gap-2">
-                  {toolStatuses[tool.id] === "IDLE" ||
-                  toolStatuses[tool.id] === "DISABLED" ? (
-                    <button
-                      onClick={() =>
-                        startToolMonitoring(tool.id, tool.endpoint)
-                      }
-                      disabled={tool.id === "SilentUserLogger"}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors text-sm"
-                    >
-                      <Play className="w-3 h-3" />
-                      WATCH
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => stopToolMonitoring(tool.id, tool.endpoint)}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors text-sm"
-                    >
-                      <Square className="w-3 h-3" />
-                      STOP
-                    </button>
-                  )}
-                </div>
+                <WatchButton
+                  toolName={tool.title}
+                  endpoint={tool.endpoint}
+                  currentStatus={toolStatuses[tool.id]}
+                  onStatusChange={(newStatus) =>
+                    setToolStatuses((prev) => ({
+                      ...prev,
+                      [tool.id]: newStatus,
+                    }))
+                  }
+                  disabled={tool.id === "SilentUserLogger"}
+                  className="w-full"
+                />
               </div>
             ))}
           </div>
