@@ -1,0 +1,137 @@
+{
+  "name": "PacketInterceptor",
+  "status": "READY",
+  "risk": "HIGH",
+  "lastExecuted": null,
+  "lastUpdated": "2024-01-15T12:00:00Z",
+  "version": "1.0.0",
+  "module": "offensive-tools",
+  "category": "network-analysis",
+  "platform": "cross-platform",
+  "health": {
+    "operational": true,
+    "dependencies": {
+      "tcpdump": "required-linux",
+      "netsh": "required-windows",
+      "netstat": "optional",
+      "ss": "optional-linux",
+      "iproute2": "required-linux"
+    },
+    "lastHealthCheck": "2024-01-15T12:00:00Z",
+    "healthStatus": "healthy"
+  },
+  "execution": {
+    "totalExecutions": 0,
+    "successfulExecutions": 0,
+    "failedExecutions": 0,
+    "averageExecutionTime": 0,
+    "lastExecutionResult": null,
+    "currentlyRunning": false,
+    "runningProcesses": [],
+    "activeCaptures": []
+  },
+  "statistics": {
+    "totalPacketsCaptured": 0,
+    "totalCaptureTime": 0,
+    "averagePacketsPerSecond": 0,
+    "protocolsDetected": [],
+    "suspiciousActivityDetected": 0,
+    "captureFilesGenerated": 0
+  },
+  "capabilities": {
+    "packetCapture": true,
+    "realTimeMonitoring": true,
+    "protocolAnalysis": true,
+    "suspiciousActivityDetection": true,
+    "multiInterfaceSupport": true,
+    "filteringSupport": true,
+    "deepPacketInspection": false,
+    "payloadAnalysis": false,
+    "networkTopologyMapping": false,
+    "trafficVisualization": false
+  },
+  "configuration": {
+    "configValid": true,
+    "settingsFile": "settings.json",
+    "lastConfigUpdate": "2024-01-15T12:00:00Z",
+    "captureDirectory": "./captures",
+    "maxRetentionDays": 7,
+    "maxCaptureSize": "1GB"
+  },
+  "security": {
+    "permissions": ["network_capture", "packet_analysis"],
+    "privilegesRequired": "administrator",
+    "auditLog": true,
+    "encryptedStorage": false,
+    "accessControl": true,
+    "rateLimit": {
+      "enabled": true,
+      "capturesPerHour": 10
+    },
+    "networkRestrictions": {
+      "enabled": true,
+      "allowedNetworks": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+    }
+  },
+  "output": {
+    "lastCaptureFile": null,
+    "capturesDirectory": "./captures",
+    "supportedFormats": ["PCAP", "JSON", "TXT"],
+    "compressionEnabled": true,
+    "retentionPolicy": "7 days"
+  },
+  "monitoring": {
+    "metricsEnabled": true,
+    "loggingLevel": "INFO",
+    "performanceTracking": true,
+    "alertsEnabled": true,
+    "realTimeAlertsEnabled": true,
+    "webhookConfigured": false
+  },
+  "networkInterfaces": {
+    "autoDetection": true,
+    "lastScannedInterfaces": [],
+    "selectedInterface": "auto",
+    "interfaceCapabilities": {}
+  },
+  "integration": {
+    "apiEndpoints": [
+      "/api/PacketInterceptor/run",
+      "/api/PacketInterceptor/update",
+      "/api/PacketInterceptor/settings",
+      "/api/PacketInterceptor/status"
+    ],
+    "webhookSupport": true,
+    "cliInterface": true,
+    "webInterface": false,
+    "apiVersion": "1.0.0"
+  },
+  "troubleshooting": {
+    "commonIssues": [
+      {
+        "issue": "Insufficient privileges for packet capture",
+        "solution": "Run with administrator/root privileges",
+        "severity": "critical"
+      },
+      {
+        "issue": "tcpdump not found (Linux)",
+        "solution": "Install tcpdump: sudo apt-get install tcpdump",
+        "severity": "critical"
+      },
+      {
+        "issue": "Network interface not accessible",
+        "solution": "Check network interface status and permissions",
+        "severity": "high"
+      },
+      {
+        "issue": "Capture file too large",
+        "solution": "Reduce capture duration or add packet filters",
+        "severity": "medium"
+      }
+    ],
+    "debugMode": false,
+    "verboseLogging": false
+  },
+  "signature": "KNOUX7-KOTS™",
+  "timestamp": "2024-01-15T12:00:00Z"
+}
