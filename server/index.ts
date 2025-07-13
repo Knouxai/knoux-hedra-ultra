@@ -33,5 +33,8 @@ export function createServer() {
   // Offensive tools endpoints
   app.use("/api", offensiveToolsRouter);
 
-  return app;
+  // إضافة خدمة WebSocket إلى التطبيق للوصول إليها من الطرق الأخرى
+  app.locals.wsService = wsService;
+
+  return httpServer;
 }
