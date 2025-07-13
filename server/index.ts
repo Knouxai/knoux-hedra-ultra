@@ -20,5 +20,8 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/execute-tool", handleExecuteTool);
 
+  // Surveillance and monitoring endpoints
+  app.use("/api", surveillanceRouter);
+
   return app;
 }
