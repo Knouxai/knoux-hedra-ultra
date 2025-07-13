@@ -1,6 +1,9 @@
 import { RequestHandler } from "express";
 import { ToolExecutionRequest, ToolExecutionResponse } from "@shared/types";
 
+// KNOUX7 KOTS™ Integration
+const KOTS_API_URL = process.env.KOTS_API_URL || "http://localhost:7070/api";
+
 export const handleExecuteTool: RequestHandler = async (req, res) => {
   try {
     const { toolId, sectionId, parameters, async } =
@@ -18,31 +21,74 @@ export const handleExecuteTool: RequestHandler = async (req, res) => {
     // Generate execution ID
     const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // Simulate tool execution start
+    try {
+      // Try to execute via KOTS™ microservices first
+      const kotsResponse = await fetch(`${KOTS_API_URL}/${toolId}/run`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          args: parameters?.args || [],
+          async: async || false,
+          timeout: parameters?.timeout || 300,
+        }),
+      });
+
+      if (kotsResponse.ok) {
+        const kotsData = await kotsResponse.json();
+
+        // Convert KOTS response to our format
+        const response: ToolExecutionResponse = {
+          executionId: kotsData.data?.executionId || executionId,
+          status: kotsData.success ? "started" : "failed",
+          estimatedTime: kotsData.data?.estimatedTime || "10-30 seconds",
+          output: {
+            message: `Tool ${toolId} execution via KOTS™ microservices`,
+            timestamp: new Date(),
+            kotsResult: kotsData,
+            logs: [
+              "🔗 Connected to KOTS™ microservices",
+              "🚀 Tool execution started via microservice",
+              "📊 Real-time monitoring enabled",
+            ],
+          },
+        };
+
+        return res.json({
+          success: true,
+          data: response,
+          timestamp: new Date(),
+          signature: "knoux7-core-kots",
+          microservice: true,
+        });
+      }
+    } catch (kotsError) {
+      console.log(
+        "KOTS microservice not available, falling back to simulation",
+      );
+    }
+
+    // Fallback to simulation if KOTS is not available
     const response: ToolExecutionResponse = {
       executionId,
       status: "started",
       estimatedTime: "10-30 seconds",
       output: {
-        message: `Tool ${toolId} execution started`,
+        message: `Tool ${toolId} execution started (simulation mode)`,
         timestamp: new Date(),
         logs: [
-          "Initializing security protocols...",
-          "Loading tool configuration...",
-          "Establishing secure connection...",
-          "Tool execution in progress...",
+          "⚠️  KOTS™ microservices not available",
+          "🔄 Falling back to simulation mode",
+          "🛠️  Tool execution in progress...",
         ],
       },
     };
 
     // If async execution, just return started status
     if (async) {
-      // In a real implementation, you would start the actual tool execution here
-      // and track it in a database or queue system
-
       setTimeout(
         () => {
-          // Simulate completion after some time
           console.log(`Tool ${toolId} completed execution (simulation)`);
         },
         10000 + Math.random() * 20000,
@@ -53,6 +99,7 @@ export const handleExecuteTool: RequestHandler = async (req, res) => {
         data: response,
         timestamp: new Date(),
         signature: "knoux7-core",
+        microservice: false,
       });
     }
 
@@ -63,10 +110,10 @@ export const handleExecuteTool: RequestHandler = async (req, res) => {
 
     const syncResponse: ToolExecutionResponse = {
       ...response,
-      status: "started", // Will be updated to completed in real implementation
+      status: "started",
       output: {
         ...response.output,
-        result: "Tool execution completed successfully",
+        result: "Tool execution completed successfully (simulation)",
         duration: "3.2 seconds",
         status: "success",
       },
@@ -77,6 +124,7 @@ export const handleExecuteTool: RequestHandler = async (req, res) => {
       data: syncResponse,
       timestamp: new Date(),
       signature: "knoux7-core",
+      microservice: false,
     });
   } catch (error) {
     console.error("Error executing tool:", error);
