@@ -1,342 +1,220 @@
-# KNOUX7 KOTS™ - PacketInterceptor Tool (Windows PowerShell)
-# Advanced Network Packet Capture and Analysis Tool
+# PacketInterceptor - Advanced Network Packet Sniffer
+# Windows PowerShell Implementation
+# KNOX Sentinel™ Offensive Operations Module
 
 param(
-    [string]$Interface = "auto",
-    [string]$Filter = "",
+    [string]$Interface = "WiFi",
+    [string]$OutputDir = "results/offensive/PacketInterceptor",
     [int]$Duration = 60,
-    [string]$OutputDir = ".\captures",
-    [int]$MaxPackets = 1000,
-    [switch]$Verbose,
-    [switch]$RealTime,
-    [string]$TargetIP = "",
-    [string]$TargetPort = ""
+    [string]$Filter = "",
+    [string]$Protocol = "all"
 )
 
-# Tool Information
-$ToolName = "PacketInterceptor"
-$ToolVersion = "1.0.0"
-$Author = "KNOUX7 Cyber Team"
+Write-Host "🕷️ PacketInterceptor - Advanced Network Sniffer" -ForegroundColor Red
+Write-Host "=================================================" -ForegroundColor Yellow
 
-Write-Host "🕷️ KNOUX7 PacketInterceptor v$ToolVersion" -ForegroundColor Magenta
-Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
-Write-Host "🔗 Interface: $Interface" -ForegroundColor Yellow
-Write-Host "⏱️  Duration: $Duration seconds" -ForegroundColor Yellow
-Write-Host "📦 Max Packets: $MaxPackets" -ForegroundColor Yellow
-Write-Host "🕐 Started: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Green
-
-# Create output directory
-if (!(Test-Path $OutputDir)) {
+# إنشاء مجلد النتائج
+if (-not (Test-Path $OutputDir)) {
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
-    Write-Host "📁 Created capture directory: $OutputDir" -ForegroundColor Green
 }
 
-# Initialize capture results
-$CaptureResults = @{
-    target = if ($TargetIP) { $TargetIP } else { "all" }
-    interface = $Interface
-    duration = $Duration
-    maxPackets = $MaxPackets
-    startTime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    endTime = $null
-    captureFile = $null
-    results = @{
-        totalPackets = 0
-        protocolBreakdown = @{}
-        topTalkers = @()
-        suspiciousActivity = @()
-        summary = @{}
-    }
-    status = "running"
-    toolVersion = $ToolVersion
-}
+$timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+$logFile = "$OutputDir\packetinterceptor_$timestamp.log"
+$captureFile = "$OutputDir\capture_$timestamp.etl"
+$reportFile = "$OutputDir\packet_report_$timestamp.json"
+
+Write-Host "🔍 Starting packet capture on interface: $Interface" -ForegroundColor Cyan
+Write-Host "⏱️  Capture duration: $Duration seconds" -ForegroundColor Gray
+Write-Host "📁 Output directory: $OutputDir" -ForegroundColor Gray
+
+# بدء اللوج
+Add-Content -Path $logFile -Value "[$timestamp] PacketInterceptor started"
 
 try {
-    # Phase 1: Network Interface Discovery
-    Write-Host "`n🔍 Phase 1: Network Interface Discovery" -ForegroundColor Magenta
-    Write-Host "━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
+    # الحصول على معلومات الشبكة
+    Write-Host "`n🔍 Network Interface Analysis" -ForegroundColor Yellow
+    $networkAdapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
     
-    # Get network adapters
-    $adapters = Get-NetAdapter | Where-Object {$_.Status -eq "Up"}
-    
-    if ($adapters.Count -eq 0) {
-        throw "No active network adapters found"
+    Write-Host "Available Network Interfaces:" -ForegroundColor Green
+    $networkAdapters | ForEach-Object {
+        Write-Host "  - $($_.Name) ($($_.InterfaceDescription))" -ForegroundColor White
     }
     
-    if ($Interface -eq "auto") {
-        # Select the first active adapter
-        $selectedAdapter = $adapters[0]
-        $Interface = $selectedAdapter.Name
-        Write-Host "🔄 Auto-selected interface: $Interface" -ForegroundColor Green
+    # العثور على الواجهة المحددة
+    $targetAdapter = $networkAdapters | Where-Object { $_.Name -like "*$Interface*" } | Select-Object -First 1
+    if (-not $targetAdapter) {
+        $targetAdapter = $networkAdapters | Select-Object -First 1
+        Write-Host "⚠️  Interface '$Interface' not found, using: $($targetAdapter.Name)" -ForegroundColor Yellow
     } else {
-        $selectedAdapter = $adapters | Where-Object {$_.Name -eq $Interface}
-        if (!$selectedAdapter) {
-            Write-Host "⚠️  Interface '$Interface' not found. Available interfaces:" -ForegroundColor Yellow
-            $adapters | ForEach-Object { Write-Host "   - $($_.Name)" -ForegroundColor Gray }
-            $selectedAdapter = $adapters[0]
-            $Interface = $selectedAdapter.Name
-            Write-Host "🔄 Using: $Interface" -ForegroundColor Green
-        }
+        Write-Host "✅ Using interface: $($targetAdapter.Name)" -ForegroundColor Green
     }
     
-    Write-Host "📡 Selected Interface: $Interface" -ForegroundColor Cyan
-    Write-Host "   MAC Address: $($selectedAdapter.MacAddress)" -ForegroundColor Gray
-    Write-Host "   Link Speed: $($selectedAdapter.LinkSpeed)" -ForegroundColor Gray
+    # بدء التقاط الحزم باستخدام netsh trace
+    Write-Host "`n🎯 Starting Packet Capture" -ForegroundColor Yellow
+    $traceCommand = "netsh trace start capture=yes overwrite=yes maxsize=100 tracefile=`"$captureFile`""
     
-    # Phase 2: Packet Capture Setup
-    Write-Host "`n🎯 Phase 2: Packet Capture Setup" -ForegroundColor Magenta
-    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
-    
-    # Generate capture filename
-    $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-    $captureFile = Join-Path $OutputDir "packet_capture_$timestamp.pcap"
-    $CaptureResults.captureFile = $captureFile
-    
-    # Build netsh trace command
-    $traceFile = Join-Path $OutputDir "network_trace_$timestamp.etl"
-    $netshCmd = "netsh trace start capture=yes tracefile='$traceFile' maxsize=100"
-    
-    if ($TargetIP) {
-        $netshCmd += " provider=Microsoft-Windows-TCPIP"
+    if ($Filter) {
+        $traceCommand += " provider=Microsoft-Windows-TCPIP"
     }
     
-    Write-Host "🎯 Starting packet capture..." -ForegroundColor Cyan
-    Write-Host "   Capture File: $(Split-Path $captureFile -Leaf)" -ForegroundColor Gray
-    Write-Host "   Duration: $Duration seconds" -ForegroundColor Gray
-    Write-Host "   Max Packets: $MaxPackets" -ForegroundColor Gray
+    Write-Host "📡 Executing: $traceCommand" -ForegroundColor Cyan
+    $startResult = Invoke-Expression $traceCommand 2>&1
     
-    # Start capture using netsh (Windows native)
-    $startResult = Invoke-Expression $netshCmd
-    
-    if ($startResult -match "started") {
+    if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Packet capture started successfully" -ForegroundColor Green
-    } else {
-        throw "Failed to start packet capture"
-    }
-    
-    # Phase 3: Real-time Monitoring (if enabled)
-    if ($RealTime) {
-        Write-Host "`n📊 Phase 3: Real-time Monitoring" -ForegroundColor Magenta
-        Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
+        Add-Content -Path $logFile -Value "[$((Get-Date).ToString())] Packet capture started on $($targetAdapter.Name)"
         
-        $monitoringDuration = [Math]::Min($Duration, 30) # Monitor for max 30 seconds
+        # عرض المعلومات الحية
+        Write-Host "`n📊 Live Capture Statistics" -ForegroundColor Yellow
         $startTime = Get-Date
+        $packetsCount = 0
         
-        while (((Get-Date) - $startTime).TotalSeconds -lt $monitoringDuration) {
-            # Get network statistics
-            $networkStats = Get-Counter -Counter "\Network Interface(*)\Bytes Total/sec" -SampleInterval 1 -MaxSamples 1
+        # مراقبة الالتقاط لفترة محددة
+        for ($i = 1; $i -le $Duration; $i++) {
+            Start-Sleep -Seconds 1
             
-            foreach ($sample in $networkStats.CounterSamples) {
-                if ($sample.InstanceName -like "*$Interface*" -and $sample.CookedValue -gt 0) {
-                    $bytesPerSec = [Math]::Round($sample.CookedValue, 2)
-                    Write-Host "📈 Network Activity: $bytesPerSec bytes/sec on $($sample.InstanceName)" -ForegroundColor Cyan
+            # عرض التقدم كل 10 ثوان
+            if ($i % 10 -eq 0) {
+                $elapsed = $i
+                $remaining = $Duration - $i
+                Write-Host "⏱️  Elapsed: ${elapsed}s | Remaining: ${remaining}s" -ForegroundColor Cyan
+                
+                # محاولة الحصول على إحصائيات الشبكة
+                try {
+                    $networkStats = Get-NetAdapterStatistics -Name $targetAdapter.Name -ErrorAction SilentlyContinue
+                    if ($networkStats) {
+                        $packetsCount = $networkStats.PacketsReceived + $networkStats.PacketsSent
+                        Write-Host "📈 Packets processed: $packetsCount" -ForegroundColor Green
+                    }
+                } catch {
+                    # تجاهل الأخطاء في إحصائيات الشبكة
                 }
             }
             
-            Start-Sleep -Seconds 2
-        }
-    }
-    
-    # Phase 4: Wait for capture duration
-    Write-Host "`n⏳ Phase 4: Capturing packets..." -ForegroundColor Magenta
-    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
-    
-    $remainingTime = $Duration
-    if ($RealTime) {
-        $remainingTime = $Duration - 30
-    }
-    
-    for ($i = 0; $i -lt $remainingTime; $i++) {
-        $progress = [Math]::Round(($i / $remainingTime) * 100, 1)
-        Write-Progress -Activity "Capturing packets" -Status "$progress% Complete" -PercentComplete $progress
-        Start-Sleep -Seconds 1
-    }
-    
-    Write-Progress -Activity "Capturing packets" -Completed
-    
-    # Stop capture
-    Write-Host "🛑 Stopping packet capture..." -ForegroundColor Yellow
-    $stopResult = netsh trace stop
-    
-    if ($stopResult -match "stopped") {
-        Write-Host "✅ Packet capture stopped successfully" -ForegroundColor Green
-    }
-    
-    # Phase 5: Basic Analysis
-    Write-Host "`n🔍 Phase 5: Packet Analysis" -ForegroundColor Magenta
-    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkMagenta
-    
-    # Analyze network connections during capture period
-    $connections = Get-NetTCPConnection | Where-Object {$_.State -eq "Established"}
-    $udpEndpoints = Get-NetUDPEndpoint
-    
-    Write-Host "📊 Network Analysis Results:" -ForegroundColor Cyan
-    Write-Host "   Active TCP Connections: $($connections.Count)" -ForegroundColor White
-    Write-Host "   UDP Endpoints: $($udpEndpoints.Count)" -ForegroundColor White
-    
-    # Protocol breakdown
-    $protocolStats = @{}
-    $protocolStats["TCP"] = $connections.Count
-    $protocolStats["UDP"] = $udpEndpoints.Count
-    
-    # Top talkers analysis
-    $topTalkers = @()
-    $connectionGroups = $connections | Group-Object RemoteAddress | Sort-Object Count -Descending | Select-Object -First 10
-    
-    foreach ($group in $connectionGroups) {
-        $remoteIP = $group.Name
-        $connectionCount = $group.Count
-        
-        # Try to resolve hostname
-        try {
-            $hostname = [System.Net.Dns]::GetHostByAddress($remoteIP).HostName
-        } catch {
-            $hostname = "Unknown"
+            Write-Host "." -NoNewline -ForegroundColor Green
         }
         
-        $topTalkers += @{
-            ip = $remoteIP
-            hostname = $hostname
-            connections = $connectionCount
-            type = "TCP"
+        Write-Host "`n`n🛑 Stopping packet capture..." -ForegroundColor Yellow
+        $stopResult = netsh trace stop 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "✅ Packet capture stopped successfully" -ForegroundColor Green
+            Add-Content -Path $logFile -Value "[$((Get-Date).ToString())] Packet capture stopped"
+        } else {
+            Write-Host "⚠️  Warning during capture stop: $stopResult" -ForegroundColor Yellow
         }
         
-        Write-Host "   🔗 $remoteIP ($hostname): $connectionCount connections" -ForegroundColor Gray
+    } else {
+        throw "Failed to start packet capture: $startResult"
     }
     
-    # Suspicious activity detection
+    # تحليل النتائج
+    Write-Host "`n🔍 Analyzing captured data..." -ForegroundColor Yellow
+    $captureSize = 0
+    if (Test-Path $captureFile) {
+        $captureSize = (Get-Item $captureFile).Length
+        Write-Host "📄 Capture file size: $([math]::Round($captureSize / 1MB, 2)) MB" -ForegroundColor Green
+    }
+    
+    # إحصائيات الشبكة النهائية
+    $finalStats = @{
+        packetsProcessed = $packetsCount
+        captureSize = $captureSize
+        networkInterface = $targetAdapter.Name
+        interfaceDescription = $targetAdapter.InterfaceDescription
+    }
+    
+    # فحص نشاط الشبكة
+    Write-Host "`n🔍 Network Activity Analysis" -ForegroundColor Yellow
+    $networkConnections = Get-NetTCPConnection | Where-Object { $_.State -eq "Established" }
+    $externalConnections = $networkConnections | Where-Object { 
+        $_.RemoteAddress -notlike "127.*" -and 
+        $_.RemoteAddress -notlike "192.168.*" -and 
+        $_.RemoteAddress -notlike "10.*" -and
+        $_.RemoteAddress -ne "::1"
+    }
+    
+    Write-Host "📊 Active TCP Connections: $($networkConnections.Count)" -ForegroundColor Cyan
+    Write-Host "🌐 External Connections: $($externalConnections.Count)" -ForegroundColor Cyan
+    
+    # كشف الأنشطة المشبوهة
     $suspiciousActivity = @()
-    
-    # Check for unusual port activity
-    $uncommonPorts = $connections | Where-Object {
-        $_.RemotePort -notin @(80, 443, 53, 22, 21, 25, 110, 143, 993, 995)
+    if ($externalConnections.Count -gt 20) {
+        $suspiciousActivity += "High number of external connections detected"
     }
     
-    if ($uncommonPorts.Count -gt 0) {
-        $suspiciousActivity += @{
-            type = "Uncommon Port Activity"
-            description = "Connections to unusual ports detected"
-            count = $uncommonPorts.Count
-            severity = "Medium"
-            ports = ($uncommonPorts | Select-Object -First 5 | ForEach-Object { $_.RemotePort }) -join ", "
+    # فحص المنافذ عالية المخاطر
+    $highRiskPorts = @(4444, 4445, 1337, 31337, 12345, 54321)
+    foreach ($conn in $networkConnections) {
+        if ($conn.LocalPort -in $highRiskPorts -or $conn.RemotePort -in $highRiskPorts) {
+            $suspiciousActivity += "High-risk port detected: $($conn.LocalPort) -> $($conn.RemoteAddress):$($conn.RemotePort)"
         }
     }
     
-    # Check for high connection count to single IP
-    $highConnectionIPs = $connectionGroups | Where-Object {$_.Count -gt 10}
-    if ($highConnectionIPs.Count -gt 0) {
-        foreach ($ip in $highConnectionIPs) {
-            $suspiciousActivity += @{
-                type = "High Connection Count"
-                description = "Multiple connections to single IP: $($ip.Name)"
-                count = $ip.Count
-                severity = "Medium"
-                target = $ip.Name
-            }
-        }
+    if ($suspiciousActivity.Count -gt 0) {
+        Write-Host "`n⚠️  Suspicious Activity Detected:" -ForegroundColor Red
+        $suspiciousActivity | ForEach-Object { Write-Host "  - $_" -ForegroundColor Yellow }
     }
     
-    $CaptureResults.results.totalPackets = $connections.Count + $udpEndpoints.Count
-    $CaptureResults.results.protocolBreakdown = $protocolStats
-    $CaptureResults.results.topTalkers = $topTalkers
-    $CaptureResults.results.suspiciousActivity = $suspiciousActivity
-    
-    # Generate Summary
+    # إنشاء التقرير النهائي
     $endTime = Get-Date
-    $actualDuration = ($endTime - (Get-Date $CaptureResults.startTime)).TotalSeconds
+    $captureDuration = ($endTime - $startTime).TotalSeconds
     
-    $CaptureResults.endTime = $endTime.ToString("yyyy-MM-dd HH:mm:ss")
-    $CaptureResults.duration = [Math]::Round($actualDuration, 2)
-    $CaptureResults.status = "completed"
-    $CaptureResults.results.summary = @{
-        captureSuccessful = $true
-        totalConnections = $CaptureResults.results.totalPackets
-        suspiciousActivityCount = $suspiciousActivity.Count
-        captureDuration = "$([Math]::Round($actualDuration, 2)) seconds"
-        riskLevel = if ($suspiciousActivity.Count -gt 5) { "High" } elseif ($suspiciousActivity.Count -gt 2) { "Medium" } else { "Low" }
-        captureFileSize = if (Test-Path $traceFile) { "$([Math]::Round((Get-Item $traceFile).Length / 1MB, 2)) MB" } else { "Unknown" }
+    $report = @{
+        interface = $targetAdapter.Name
+        interfaceDescription = $targetAdapter.InterfaceDescription
+        startTime = $startTime.ToString("yyyy-MM-dd HH:mm:ss")
+        endTime = $endTime.ToString("yyyy-MM-dd HH:mm:ss")
+        duration = $captureDuration
+        status = "COMPLETED"
+        files = @{
+            capture = $captureFile
+            log = $logFile
+        }
+        statistics = @{
+            packetsProcessed = $packetsCount
+            captureSize = $captureSize
+            activeTCPConnections = $networkConnections.Count
+            externalConnections = $externalConnections.Count
+        }
+        suspiciousActivity = $suspiciousActivity
+        risk = if ($suspiciousActivity.Count -gt 0) { "HIGH" } else { "LOW" }
     }
     
-    # Save results to JSON
-    $jsonOutput = $CaptureResults | ConvertTo-Json -Depth 10
-    $outputFile = Join-Path $OutputDir "packet_analysis_$(Get-Date -Format 'yyyyMMdd_HHmmss').json"
-    $jsonOutput | Out-File -FilePath $outputFile -Encoding UTF8
+    $report | ConvertTo-Json -Depth 3 | Out-File -FilePath $reportFile -Encoding UTF8
     
-    # Generate human-readable report
-    $reportFile = Join-Path $OutputDir "packet_report_$(Get-Date -Format 'yyyyMMdd_HHmmss').txt"
-    $report = @"
-KNOUX7 PacketInterceptor Analysis Report
-=======================================
-Interface: $Interface
-Capture Time: $($CaptureResults.startTime) - $($CaptureResults.endTime)
-Duration: $($CaptureResults.duration) seconds
-Capture File: $(Split-Path $traceFile -Leaf)
-
-CAPTURE SUMMARY
---------------
-Total Connections Analyzed: $($CaptureResults.results.totalPackets)
-TCP Connections: $($protocolStats.TCP)
-UDP Endpoints: $($protocolStats.UDP)
-Capture File Size: $($CaptureResults.results.summary.captureFileSize)
-
-TOP TALKERS
------------
-$($topTalkers | ForEach-Object { "$($_.ip) ($($_.hostname)) - $($_.connections) connections" } | Out-String)
-
-SUSPICIOUS ACTIVITY
-------------------
-Total Alerts: $($suspiciousActivity.Count)
-Risk Level: $($CaptureResults.results.summary.riskLevel)
-
-$($suspiciousActivity | ForEach-Object { "- [$($_.severity)] $($_.type): $($_.description)" } | Out-String)
-
-PROTOCOL BREAKDOWN
------------------
-$($protocolStats.GetEnumerator() | ForEach-Object { "$($_.Key): $($_.Value)" } | Out-String)
-
-RECOMMENDATIONS
----------------
-1. Review suspicious connections and verify legitimacy
-2. Monitor unusual port activity
-3. Implement network segmentation for sensitive services
-4. Regular network traffic analysis
-5. Set up automated alerting for anomalous patterns
-
-Generated by KNOUX7 PacketInterceptor v$ToolVersion
-"@
-
-    $report | Out-File -FilePath $reportFile -Encoding UTF8
+    Write-Host "`n✅ PacketInterceptor completed successfully!" -ForegroundColor Green
+    Write-Host "📊 Capture Duration: $([math]::Round($captureDuration, 2)) seconds" -ForegroundColor White
+    Write-Host "📄 Report saved to: $reportFile" -ForegroundColor White
+    Write-Host "📡 Capture file: $captureFile" -ForegroundColor White
     
-    # Final Summary
-    Write-Host "`n📊 CAPTURE COMPLETED" -ForegroundColor Green
-    Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor DarkGreen
-    Write-Host "🔗 Interface: $Interface" -ForegroundColor White
-    Write-Host "⏱️  Duration: $($CaptureResults.duration) seconds" -ForegroundColor White
-    Write-Host "📦 Connections: $($CaptureResults.results.totalPackets)" -ForegroundColor White
-    Write-Host "⚠️  Suspicious Activity: $($suspiciousActivity.Count)" -ForegroundColor White
-    Write-Host "🛡️  Risk Level: $($CaptureResults.results.summary.riskLevel)" -ForegroundColor White
-    Write-Host "📁 Files saved to: $OutputDir" -ForegroundColor White
-    Write-Host "   - Trace: $(Split-Path $traceFile -Leaf)" -ForegroundColor Gray
-    Write-Host "   - Analysis: $(Split-Path $outputFile -Leaf)" -ForegroundColor Gray
-    Write-Host "   - Report: $(Split-Path $reportFile -Leaf)" -ForegroundColor Gray
+    Add-Content -Path $logFile -Value "[$($endTime.ToString())] PacketInterceptor completed successfully"
     
-    # Return results for API
-    Write-Output $jsonOutput
-
+    # إرجاع النتيجة للـ API
+    Write-Output ($report | ConvertTo-Json -Compress)
+    
 } catch {
-    $errorMsg = $_.Exception.Message
-    Write-Host "❌ CAPTURE FAILED: $errorMsg" -ForegroundColor Red
+    $errorTime = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $errorMsg = "ERROR: $($_.Exception.Message)"
     
-    # Try to stop any running traces
+    Write-Host "❌ $errorMsg" -ForegroundColor Red
+    Add-Content -Path $logFile -Value "[$errorTime] $errorMsg"
+    
+    # محاولة إيقاف التتبع في حالة الخطأ
     try {
-        netsh trace stop 2>$null
-    } catch {}
+        netsh trace stop | Out-Null
+    } catch {
+        # تجاهل أخطاء إيقاف التتبع
+    }
     
-    $CaptureResults.status = "failed"
-    $CaptureResults.error = $errorMsg
-    $CaptureResults.endTime = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $errorReport = @{
+        interface = $Interface
+        status = "ERROR"
+        error = $_.Exception.Message
+        timestamp = $errorTime
+        risk = "UNKNOWN"
+    }
     
-    $errorOutput = $CaptureResults | ConvertTo-Json -Depth 10
-    Write-Output $errorOutput
+    Write-Output ($errorReport | ConvertTo-Json -Compress)
     exit 1
 }
