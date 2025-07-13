@@ -1,0 +1,84 @@
+{
+  "tool": "AutoRecon",
+  "version": "1.0.0",
+  "description": "Advanced vulnerability scanner and reconnaissance tool",
+  "category": "offensive",
+  "platform": ["windows", "linux"],
+  "settings": {
+    "scanning": {
+      "defaultScanType": "full",
+      "timeoutSeconds": 300,
+      "maxConcurrentScans": 1,
+      "retryAttempts": 2,
+      "enableAggressive": false
+    },
+    "portScanning": {
+      "enablePortScan": true,
+      "portRange": "1-65535",
+      "commonPortsOnly": false,
+      "tcpScan": true,
+      "udpScan": false,
+      "scanTiming": "T4"
+    },
+    "serviceDetection": {
+      "enableServiceEnum": true,
+      "enableVersionDetection": true,
+      "enableOSDetection": true,
+      "enableScriptScan": false,
+      "customScripts": []
+    },
+    "vulnerabilityAssessment": {
+      "enableVulnScan": true,
+      "checkCVE": true,
+      "checkMisconfig": true,
+      "riskThreshold": "MEDIUM",
+      "enableExploitCheck": false
+    },
+    "webScanning": {
+      "enableWebScan": true,
+      "checkDirectories": true,
+      "checkFiles": true,
+      "enableSQLi": false,
+      "enableXSS": false,
+      "userAgent": "AutoRecon/1.0"
+    },
+    "outputs": {
+      "outputDirectory": "results/offensive/AutoRecon",
+      "saveRawOutput": true,
+      "enableJSONReport": true,
+      "enableXMLReport": false,
+      "enableHTMLReport": false,
+      "compressionEnabled": true
+    },
+    "logging": {
+      "logLevel": "INFO",
+      "enableVerbose": false,
+      "logToFile": true,
+      "logRotation": true,
+      "maxLogSizeMB": 10
+    },
+    "safety": {
+      "requireTargetConfirmation": true,
+      "preventLocalScan": true,
+      "preventPrivateNetworkScan": false,
+      "maxScanDuration": 3600,
+      "enableRateLimiting": true
+    }
+  },
+  "dependencies": {
+    "windows": {
+      "powershell": ">=5.0",
+      "nmap": "optional",
+      "netcat": "optional"
+    },
+    "linux": {
+      "bash": ">=4.0",
+      "nmap": "recommended",
+      "netcat": "recommended",
+      "curl": "recommended"
+    }
+  },
+  "riskLevel": "MEDIUM",
+  "requiresTarget": true,
+  "requiresElevatedPrivileges": false
+}

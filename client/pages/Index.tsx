@@ -563,7 +563,7 @@ export default function Index() {
                     </div>
 
                     <Link
-                      to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/\s+/g, "-")}`}
+                      to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/[^\w]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}`}
                       className="w-full mt-4 p-3 rounded-lg border-2 text-center font-bold transition-all hover:scale-105 block"
                       style={{
                         borderColor: sections[selectedSection].color,
@@ -761,7 +761,7 @@ export default function Index() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes twinkle {
           0%,
           100% {

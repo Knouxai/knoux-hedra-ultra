@@ -1,0 +1,105 @@
+{
+  "tool": "SystemWatchdog",
+  "version": "1.0.0",
+  "description": "Advanced system monitoring tool for process and resource surveillance",
+  "category": "surveillance",
+  "platform": ["windows", "linux", "macos"],
+  "settings": {
+    "monitoring": {
+      "defaultDuration": 300,
+      "intervalSeconds": 10,
+      "logRetentionDays": 7,
+      "alertEnabled": true
+    },
+    "thresholds": {
+      "cpuUsagePercent": 80,
+      "memoryUsagePercent": 85,
+      "diskUsagePercent": 90,
+      "networkConnectionsMax": 20
+    },
+    "detection": {
+      "suspiciousProcesses": [
+        "nc.exe",
+        "ncat.exe",
+        "netcat.exe",
+        "pwdump",
+        "mimikatz",
+        "msfconsole",
+        "meterpreter",
+        "psexec",
+        "wce.exe"
+      ],
+      "monitorNewProcesses": true,
+      "monitorNetworkConnections": true,
+      "monitorLoginEvents": true,
+      "monitorFileAccess": false
+    },
+    "logging": {
+      "logLevel": "INFO",
+      "logPath": "results/surveillance/systemwatchdog.log",
+      "logFormat": "timestamp",
+      "maxLogSizeMB": 10,
+      "enableConsoleOutput": true
+    },
+    "alerts": {
+      "emailNotifications": false,
+      "webhookUrl": "",
+      "alertCooldownMinutes": 5,
+      "severityLevels": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "advanced": {
+      "enableHeuristics": true,
+      "behaviorAnalysis": false,
+      "networkPacketCapture": false,
+      "memoryDumpOnAlert": false,
+      "autoQuarantine": false
+    }
+  },
+  "outputs": {
+    "logFile": {
+      "path": "results/surveillance/systemwatchdog.log",
+      "format": "text",
+      "rotation": "daily"
+    },
+    "jsonReport": {
+      "path": "results/surveillance/systemwatchdog-report.json",
+      "enabled": true,
+      "includeRawData": false
+    },
+    "csvExport": {
+      "path": "results/surveillance/systemwatchdog-export.csv",
+      "enabled": false,
+      "fields": ["timestamp", "event", "severity", "details"]
+    }
+  },
+  "dependencies": {
+    "windows": {
+      "powershell": ">=5.0",
+      "wmi": "required",
+      "eventlog": "required"
+    },
+    "linux": {
+      "bash": ">=4.0",
+      "ps": "required",
+      "netstat": "optional",
+      "top": "optional"
+    }
+  },
+  "compatibility": {
+    "windows": ["10", "11", "Server 2016", "Server 2019", "Server 2022"],
+    "linux": ["Ubuntu 18+", "CentOS 7+", "RHEL 7+", "Debian 9+"],
+    "macos": ["10.14+"]
+  },
+  "security": {
+    "requiresElevatedPrivileges": true,
+    "dataEncryption": false,
+    "anonymizeOutput": false,
+    "secureDelete": true
+  },
+  "performance": {
+    "maxCpuUsage": 5,
+    "maxMemoryUsageMB": 50,
+    "diskSpaceRequiredMB": 100,
+    "networkBandwidthKbps": 0
+  }
+}

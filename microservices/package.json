@@ -1,0 +1,56 @@
+{
+  "name": "knoux-offensive-tools-microservices",
+  "version": "1.0.0",
+  "description": "KNOX Sentinel Cyber Security Microservices - KOTS™ Standard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "nodemon server.js",
+    "server": "node server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "tools:create": "node scripts/create-all-tools.js",
+    "tools:update": "node scripts/update-all-tools.js",
+    "tools:health": "curl http://localhost:7070/api/health",
+    "tools:list": "curl http://localhost:7070/api/tools",
+    "lint": "eslint *.js",
+    "format": "prettier --write *.js",
+    "docs": "jsdoc -d docs *.js",
+    "clean": "rm -rf node_modules package-lock.json",
+    "install:clean": "npm run clean && npm install",
+    "status": "curl http://localhost:7070/api/system",
+    "logs": "tail -f logs/kots.log 2>/dev/null || echo 'No log file found'",
+    "stop": "pkill -f 'node.*server.js' || echo 'No server process found'",
+    "restart": "npm run stop && sleep 2 && npm start",
+    "docker:build": "docker build -t knoux7-kots .",
+    "docker:run": "docker run -p 7070:7070 -p 7071:7071 knoux7-kots",
+    "backup": "tar -czf kots-backup-$(date +%Y%m%d-%H%M%S).tar.gz --exclude=node_modules .",
+    "setup": "npm install && npm run tools:create"
+  },
+  "keywords": [
+    "cybersecurity",
+    "penetration-testing",
+    "microservices",
+    "knoux",
+    "kots"
+  ],
+  "author": "KNOUX7 - Cyber Security Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0",
+    "node-cron": "^3.0.3",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

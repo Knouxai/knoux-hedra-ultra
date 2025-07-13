@@ -1,0 +1,44 @@
+{
+  "tool": "PacketInterceptor",
+  "version": "1.0.0",
+  "description": "Advanced network packet sniffer and analyzer",
+  "category": "offensive",
+  "platform": ["windows", "linux"],
+  "riskLevel": "HIGH",
+  "requiresElevatedPrivileges": true,
+  "settings": {
+    "capture": {
+      "defaultInterface": "auto",
+      "defaultDuration": 60,
+      "maxDuration": 3600,
+      "bufferSize": "10MB",
+      "enablePromiscuous": true
+    },
+    "filtering": {
+      "enableFiltering": false,
+      "protocolFilter": "all",
+      "portFilter": "",
+      "hostFilter": "",
+      "customBPF": ""
+    },
+    "analysis": {
+      "enableRealTimeAnalysis": true,
+      "detectSuspiciousActivity": true,
+      "enableStatistics": true,
+      "enableProtocolDecoding": false
+    },
+    "outputs": {
+      "outputDirectory": "results/offensive/PacketInterceptor",
+      "saveRawCapture": true,
+      "enableJSONReport": true,
+      "enablePCAPOutput": true,
+      "compressionEnabled": false
+    },
+    "safety": {
+      "requireConfirmation": true,
+      "maxCaptureSize": "100MB",
+      "enableDataSanitization": true,
+      "preventDataLeakage": true
+    }
+  }
+}

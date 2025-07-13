@@ -1,0 +1,58 @@
+{
+  "tool": "AttackScriptGenerator",
+  "version": "1.0.0",
+  "description": "Dynamic attack script generator for penetration testing",
+  "category": "offensive",
+  "platform": ["windows", "linux"],
+  "riskLevel": "MEDIUM",
+  "requiresTarget": true,
+  "settings": {
+    "generation": {
+      "defaultPlatform": "powershell",
+      "defaultAttackType": "web",
+      "enableCustomTemplates": true,
+      "maxScriptSize": "1MB",
+      "enableObfuscation": false
+    },
+    "attackTypes": {
+      "web": {
+        "enabled": true,
+        "includeDirectoryEnum": true,
+        "includeFileEnum": true,
+        "includeSQLi": false,
+        "includeXSS": false
+      },
+      "network": {
+        "enabled": true,
+        "includePortScan": true,
+        "includePingSweep": true,
+        "includeServiceEnum": true
+      },
+      "smb": {
+        "enabled": true,
+        "includeShareEnum": true,
+        "includeNullSession": true,
+        "includeUserEnum": false
+      },
+      "dns": {
+        "enabled": true,
+        "includeZoneTransfer": true,
+        "includeSubdomainEnum": true,
+        "includeDNSEnum": true
+      }
+    },
+    "outputs": {
+      "outputDirectory": "results/offensive/AttackScriptGenerator",
+      "saveScripts": true,
+      "enableJSONReport": true,
+      "scriptFormat": "readable",
+      "includeComments": true
+    },
+    "safety": {
+      "requireTargetValidation": true,
+      "preventMaliciousCode": true,
+      "enableCodeReview": false,
+      "maxExecutionTime": 300
+    }
+  }
+}

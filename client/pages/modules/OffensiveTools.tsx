@@ -8,11 +8,18 @@ import {
   Globe,
   Eye,
   Bug,
+  Shield,
+  Terminal,
+  Network,
+  Target,
+  AlertTriangle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function OffensiveTools() {
   const [activeTools, setActiveTools] = useState<string[]>([]);
+  const [selectedTarget, setSelectedTarget] = useState("");
+  const [attackResults, setAttackResults] = useState<any[]>([]);
 
   const toggleTool = (toolId: string) => {
     setActiveTools((prev) =>
@@ -20,6 +27,33 @@ export default function OffensiveTools() {
         ? prev.filter((id) => id !== toolId)
         : [...prev, toolId],
     );
+  };
+
+  const executeTool = async (toolId: string) => {
+    const newResult = {
+      id: Date.now(),
+      toolId,
+      timestamp: new Date(),
+      status: "running",
+      output: "Initializing attack sequence...",
+    };
+
+    setAttackResults((prev) => [newResult, ...prev]);
+
+    // Simulate attack execution
+    setTimeout(() => {
+      setAttackResults((prev) =>
+        prev.map((result) =>
+          result.id === newResult.id
+            ? {
+                ...result,
+                status: "completed",
+                output: "Attack sequence completed successfully",
+              }
+            : result,
+        ),
+      );
+    }, 3000);
   };
 
   const offensiveTools = [
@@ -30,7 +64,8 @@ export default function OffensiveTools() {
       icon: Search,
       description: "Intelligent vulnerability scanner",
       status: "READY",
-      emoji: "🧨",
+      emoji: "🔍",
+      riskLevel: "medium",
     },
     {
       id: "packet-sniffer",
@@ -40,6 +75,7 @@ export default function OffensiveTools() {
       description: "Network packet capture and analysis",
       status: "LISTENING",
       emoji: "🕷️",
+      riskLevel: "high",
     },
     {
       id: "script-gen",
@@ -48,16 +84,18 @@ export default function OffensiveTools() {
       icon: Zap,
       description: "Automated attack script generation",
       status: "READY",
-      emoji: "💣",
+      emoji: "⚡",
+      riskLevel: "critical",
     },
     {
-      id: "wifi-pentesting",
-      name: "WiFi Penetration",
+      id: "wifi-pentest",
+      name: "WiFi Penetration Testing",
       nameAr: "استهداف WiFi/APs واختبار الاختراق",
       icon: Wifi,
-      description: "WiFi and Access Point testing",
-      status: "SCANNING",
-      emoji: "🎯",
+      description: "WiFi and Access Point security testing",
+      status: "READY",
+      emoji: "📡",
+      riskLevel: "high",
     },
     {
       id: "osint-tools",
@@ -65,26 +103,29 @@ export default function OffensiveTools() {
       nameAr: "أدوات OSINT للبحث العميق",
       icon: Globe,
       description: "Open Source Intelligence gathering",
-      status: "SEARCHING",
+      status: "ACTIVE",
       emoji: "🛰️",
+      riskLevel: "low",
     },
     {
       id: "mac-spoof",
       name: "MAC/ARP Spoofing",
       nameAr: "انتحال MAC/ARP/Spoof",
-      icon: Eye,
-      description: "Network identity spoofing tools",
+      icon: Network,
+      description: "MAC and ARP address spoofing tools",
       status: "READY",
       emoji: "🎭",
+      riskLevel: "high",
     },
     {
       id: "cve-exploit",
       name: "CVE Exploiter",
       nameAr: "استغلال الثغرات المعروفة",
       icon: Bug,
-      description: "Known vulnerability exploitation",
-      status: "LOADED",
-      emoji: "🧪",
+      description: "Known CVE vulnerability exploitation",
+      status: "DISABLED",
+      emoji: "💥",
+      riskLevel: "critical",
     },
   ];
 
@@ -115,40 +156,20 @@ export default function OffensiveTools() {
         </div>
       </header>
 
-      {/* Warning Banner */}
-      <div className="p-6 pt-0">
-        <div className="glass-card rounded-xl p-4 border-l-4 border-red-400">
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-full bg-red-400 flex items-center justify-center text-xs font-bold text-white">
-              !
-            </div>
-            <div>
-              <h3 className="text-red-400 font-bold text-sm">
-                Ethical Use Only
-              </h3>
-              <p className="text-cyber-purple-light text-xs">
-                These tools are for authorized penetration testing and security
-                research only. Unauthorized use is illegal.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Content */}
-      <main className="p-6 pt-0">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <main className="p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Module Overview */}
           <div className="glass-card rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-red-400">
-                Penetration Testing Arsenal
+                Offensive Operations Center
               </h2>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-400 animate-pulse"></div>
                   <span className="text-sm font-mono text-cyber-purple-light">
-                    {activeTools.length}/7 ARMED
+                    {activeTools.length}/7 WEAPONS ARMED
                   </span>
                 </div>
                 <button
@@ -166,7 +187,7 @@ export default function OffensiveTools() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="glass-cyber rounded-lg p-4 text-center">
                 <Swords className="w-8 h-8 text-red-400 mx-auto mb-2" />
                 <div className="text-2xl font-bold text-red-400">ARMED</div>
@@ -175,118 +196,242 @@ export default function OffensiveTools() {
                 </div>
               </div>
               <div className="glass-cyber rounded-lg p-4 text-center">
-                <Bug className="w-8 h-8 text-cyber-neon mx-auto mb-2" />
+                <Target className="w-8 h-8 text-cyber-neon mx-auto mb-2" />
                 <div className="text-2xl font-bold text-cyber-neon">
                   {activeTools.length}
                 </div>
                 <div className="text-xs text-cyber-purple-light">
-                  Tools Armed
+                  Tools Active
                 </div>
               </div>
               <div className="glass-cyber rounded-lg p-4 text-center">
-                <Search className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-yellow-400">127</div>
+                <Terminal className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-yellow-400">
+                  {attackResults.length}
+                </div>
                 <div className="text-xs text-cyber-purple-light">
-                  Targets Found
+                  Attacks Executed
+                </div>
+              </div>
+              <div className="glass-cyber rounded-lg p-4 text-center">
+                <AlertTriangle className="w-8 h-8 text-orange-400 mx-auto mb-2" />
+                <div className="text-2xl font-bold text-orange-400">HIGH</div>
+                <div className="text-xs text-cyber-purple-light">
+                  Risk Level
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Offensive Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {offensiveTools.map((tool) => {
-              const IconComponent = tool.icon;
-              const isActive = activeTools.includes(tool.id);
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Offensive Tools Grid */}
+            <div className="lg:col-span-2">
+              <h3 className="text-lg font-bold text-red-400 mb-4">
+                Penetration Testing Arsenal
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {offensiveTools.map((tool) => {
+                  const IconComponent = tool.icon;
+                  const isActive = activeTools.includes(tool.id);
+                  const isDisabled = tool.status === "DISABLED";
 
-              return (
-                <div
-                  key={tool.id}
-                  className="glass-card rounded-xl p-6 group cursor-pointer hover:scale-105 transition-all duration-300"
-                  onClick={() => toggleTool(tool.id)}
-                >
-                  <div className="flex items-start justify-between mb-4">
+                  return (
                     <div
-                      className={`w-12 h-12 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform ${isActive ? "bg-red-400/20 border-red-400" : "border-cyber-glass-border"} border`}
-                    >
-                      <IconComponent
-                        className={`w-6 h-6 ${isActive ? "text-red-400" : "text-cyber-neon"}`}
-                      />
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <div className="text-2xl">{tool.emoji}</div>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          tool.status === "LISTENING" ||
-                          tool.status === "SCANNING" ||
-                          tool.status === "SEARCHING"
-                            ? "bg-red-400 animate-pulse"
-                            : tool.status === "LOADED"
-                              ? "bg-yellow-400 animate-pulse"
-                              : "bg-cyber-neon"
-                        }`}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <h3
-                    className={`text-lg font-bold ${isActive ? "text-red-400" : "text-cyber-neon"} mb-1`}
-                  >
-                    {tool.name}
-                  </h3>
-                  <h4 className="text-sm text-cyber-purple-light mb-3 font-mono">
-                    {tool.nameAr}
-                  </h4>
-                  <p className="text-cyber-purple-light text-sm mb-4">
-                    {tool.description}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`text-xs font-mono ${isActive ? "text-red-400" : "text-cyber-purple-light"}`}
-                    >
-                      {tool.status}
-                    </span>
-                    <button
-                      className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                        isActive
-                          ? "bg-red-400/10 text-red-400 border-red-400"
-                          : "bg-cyber-neon/10 text-cyber-neon border-cyber-neon hover:bg-red-400/10 hover:text-red-400 hover:border-red-400"
+                      key={tool.id}
+                      className={`glass-card rounded-xl p-4 group cursor-pointer hover:scale-105 transition-all duration-300 ${
+                        isDisabled ? "opacity-50" : ""
                       }`}
+                      onClick={() => !isDisabled && toggleTool(tool.id)}
                     >
-                      {isActive ? "ARMED" : "ARM"}
+                      <div className="flex items-start justify-between mb-3">
+                        <div
+                          className={`w-10 h-10 rounded-lg glass-cyber flex items-center justify-center group-hover:scale-110 transition-transform ${
+                            isActive
+                              ? "bg-red-400/20 border-red-400"
+                              : "border-cyber-glass-border"
+                          } border`}
+                        >
+                          <IconComponent
+                            className={`w-5 h-5 ${
+                              isActive ? "text-red-400" : "text-cyber-neon"
+                            }`}
+                          />
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <div className="text-lg">{tool.emoji}</div>
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              tool.status === "ACTIVE" ||
+                              tool.status === "LISTENING"
+                                ? "bg-green-400 animate-pulse"
+                                : tool.status === "DISABLED"
+                                  ? "bg-gray-400"
+                                  : "bg-red-400"
+                            }`}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <h4
+                        className={`text-sm font-bold ${
+                          isActive ? "text-red-400" : "text-cyber-neon"
+                        } mb-1`}
+                      >
+                        {tool.name}
+                      </h4>
+                      <h5 className="text-xs text-cyber-purple-light mb-2 font-mono">
+                        {tool.nameAr}
+                      </h5>
+                      <p className="text-cyber-purple-light text-xs mb-3">
+                        {tool.description}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-xs font-mono ${
+                              isActive
+                                ? "text-red-400"
+                                : "text-cyber-purple-light"
+                            }`}
+                          >
+                            {tool.status}
+                          </span>
+                          <span
+                            className={`text-xs px-1 py-0.5 rounded text-white ${
+                              tool.riskLevel === "critical"
+                                ? "bg-red-500"
+                                : tool.riskLevel === "high"
+                                  ? "bg-orange-500"
+                                  : tool.riskLevel === "medium"
+                                    ? "bg-yellow-500"
+                                    : "bg-green-500"
+                            }`}
+                          >
+                            {tool.riskLevel.toUpperCase()}
+                          </span>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isDisabled) executeTool(tool.id);
+                          }}
+                          disabled={isDisabled}
+                          className={`text-xs px-2 py-1 rounded-full border transition-all ${
+                            isDisabled
+                              ? "border-gray-600 text-gray-600 cursor-not-allowed"
+                              : isActive
+                                ? "bg-red-400/10 text-red-400 border-red-400"
+                                : "bg-cyber-neon/10 text-cyber-neon border-cyber-neon hover:bg-red-400/10 hover:text-red-400 hover:border-red-400"
+                          }`}
+                        >
+                          {isDisabled ? "DISABLED" : "EXECUTE"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Target & Results */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* Target Selection */}
+              <div className="glass-card rounded-xl p-4">
+                <h3 className="text-lg font-bold text-red-400 mb-4">
+                  Target Configuration
+                </h3>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={selectedTarget}
+                    onChange={(e) => setSelectedTarget(e.target.value)}
+                    placeholder="Enter target IP/domain..."
+                    className="w-full px-3 py-2 bg-cyber-glass/30 border border-cyber-glass-border rounded-lg text-cyber-neon placeholder-cyber-purple-light focus:border-red-400 focus:outline-none text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <button className="flex-1 px-3 py-2 bg-red-400/10 border border-red-400 rounded-lg text-red-400 text-sm hover:bg-red-400/20 transition-all">
+                      Scan Target
+                    </button>
+                    <button className="flex-1 px-3 py-2 bg-cyber-glass/30 border border-cyber-glass-border rounded-lg text-cyber-neon text-sm hover:border-cyber-neon transition-all">
+                      Clear
                     </button>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+
+              {/* Attack Results */}
+              <div className="glass-card rounded-xl p-4">
+                <h3 className="text-lg font-bold text-red-400 mb-4">
+                  Attack Results
+                </h3>
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {attackResults.length === 0 ? (
+                    <div className="text-center text-cyber-purple-light text-sm py-8">
+                      No attacks executed yet
+                    </div>
+                  ) : (
+                    attackResults.map((result) => (
+                      <div
+                        key={result.id}
+                        className="p-3 bg-cyber-glass/30 rounded-lg border border-cyber-glass-border"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-mono text-cyber-neon">
+                            {result.toolId}
+                          </span>
+                          <span
+                            className={`text-xs px-2 py-1 rounded ${
+                              result.status === "running"
+                                ? "bg-yellow-400/20 text-yellow-400"
+                                : "bg-green-400/20 text-green-400"
+                            }`}
+                          >
+                            {result.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-cyber-purple-light">
+                          {result.output}
+                        </p>
+                        <div className="text-xs text-cyber-purple-light/70 mt-1">
+                          {result.timestamp.toLocaleTimeString()}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Quick Attack Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <button className="btn-cyber p-4 mode-attack">
               <div className="text-center">
                 <Search className="w-6 h-6 mx-auto mb-2" />
-                <div>Target Discovery</div>
-                <div className="text-xs opacity-70">
-                  Automated reconnaissance
-                </div>
+                <div>Reconnaissance</div>
+                <div className="text-xs opacity-70">Target discovery</div>
               </div>
             </button>
             <button className="btn-cyber p-4 mode-attack">
               <div className="text-center">
                 <Zap className="w-6 h-6 mx-auto mb-2" />
-                <div>Launch Attack</div>
-                <div className="text-xs opacity-70">
-                  Execute penetration test
-                </div>
+                <div>Generate Payload</div>
+                <div className="text-xs opacity-70">Custom attack scripts</div>
               </div>
             </button>
             <button className="btn-cyber p-4 mode-attack">
               <div className="text-center">
-                <Bug className="w-6 h-6 mx-auto mb-2" />
-                <div>Exploit Report</div>
-                <div className="text-xs opacity-70">Generate findings</div>
+                <Network className="w-6 h-6 mx-auto mb-2" />
+                <div>Network Mapping</div>
+                <div className="text-xs opacity-70">Infrastructure scan</div>
+              </div>
+            </button>
+            <button className="btn-cyber p-4 mode-attack">
+              <div className="text-center">
+                <Terminal className="w-6 h-6 mx-auto mb-2" />
+                <div>Generate Report</div>
+                <div className="text-xs opacity-70">Attack summary</div>
               </div>
             </button>
           </div>

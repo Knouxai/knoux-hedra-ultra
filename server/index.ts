@@ -1,9 +1,19 @@
 import express from "express";
 import cors from "cors";
+import { createServer } from "http";
 import { handleDemo } from "./routes/demo";
+import { handleExecuteTool } from "./routes/execute-tool";
+import surveillanceRouter from "./routes/surveillance";
+import offensiveToolsRouter from "./routes/offensive-tools";
+import forensicsRouter from "./routes/forensics";
+import WebSocketService from "./services/WebSocketService";
 
 export function createServer() {
   const app = express();
+  const httpServer = createServer(app);
+
+  // إنشاء خدمة WebSocket
+  const wsService = new WebSocketService(httpServer);
 
   // Middleware
   app.use(cors());
@@ -16,6 +26,19 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+  app.post("/api/execute-tool", handleExecuteTool);
 
-  return app;
+  // Surveillance and monitoring endpoints
+  app.use("/api", surveillanceRouter);
+
+  // Offensive tools endpoints
+  app.use("/api", offensiveToolsRouter);
+
+  // Digital forensics endpoints
+  app.use("/api", forensicsRouter);
+
+  // إضافة خدمة WebSocket إلى التطبيق للوصول إليها من الطرق ��لأخرى
+  app.locals.wsService = wsService;
+
+  return httpServer;
 }
