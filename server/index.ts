@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
+import { createServer } from "http";
 import { handleDemo } from "./routes/demo";
 import { handleExecuteTool } from "./routes/execute-tool";
 import surveillanceRouter from "./routes/surveillance";
 import offensiveToolsRouter from "./routes/offensive-tools";
+import WebSocketService from "./services/WebSocketService";
 
 export function createServer() {
   const app = express();
