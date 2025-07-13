@@ -352,20 +352,12 @@ export default function Surveillance() {
               <h3 className="text-lg font-semibold text-orange-400">Network</h3>
               <Eye className="w-5 h-5 text-orange-400" />
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Activity:</span>
-                <span className="font-mono">
-                  {systemStats.network.toFixed(1)}%
-                </span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-orange-400 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemStats.network}%` }}
-                />
-              </div>
-            </div>
+            <ProgressBar
+              value={systemStats.network}
+              label="Activity"
+              color="orange"
+              animated={systemStats.network > 70}
+            />
           </div>
         </div>
 
