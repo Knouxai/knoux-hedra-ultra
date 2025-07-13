@@ -8,11 +8,18 @@ import {
   Globe,
   Eye,
   Bug,
+  Shield,
+  Terminal,
+  Network,
+  Target,
+  Skull,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function OffensiveTools() {
   const [activeTools, setActiveTools] = useState<string[]>([]);
+  const [selectedTarget, setSelectedTarget] = useState("");
+  const [attackResults, setAttackResults] = useState<any[]>([]);
 
   const toggleTool = (toolId: string) => {
     setActiveTools((prev) =>
@@ -20,6 +27,29 @@ export default function OffensiveTools() {
         ? prev.filter((id) => id !== toolId)
         : [...prev, toolId],
     );
+  };
+
+  const executeTool = async (toolId: string) => {
+    const newResult = {
+      id: Date.now(),
+      toolId,
+      timestamp: new Date(),
+      status: "running",
+      output: "Initializing attack sequence...",
+    };
+
+    setAttackResults(prev => [newResult, ...prev]);
+
+    // Simulate attack execution
+    setTimeout(() => {
+      setAttackResults(prev =>
+        prev.map(result =>
+          result.id === newResult.id
+            ? { ...result, status: "completed", output: "Attack sequence completed successfully" }
+            : result
+        )
+      );
+    }, 3000);
   };
 
   const offensiveTools = [
@@ -30,7 +60,8 @@ export default function OffensiveTools() {
       icon: Search,
       description: "Intelligent vulnerability scanner",
       status: "READY",
-      emoji: "🧨",
+      emoji: "🔍",
+      riskLevel: "medium",
     },
     {
       id: "packet-sniffer",
@@ -40,6 +71,7 @@ export default function OffensiveTools() {
       description: "Network packet capture and analysis",
       status: "LISTENING",
       emoji: "🕷️",
+      riskLevel: "high",
     },
     {
       id: "script-gen",
@@ -48,6 +80,49 @@ export default function OffensiveTools() {
       icon: Zap,
       description: "Automated attack script generation",
       status: "READY",
+      emoji: "⚡",
+      riskLevel: "critical",
+    },
+    {
+      id: "wifi-pentest",
+      name: "WiFi Penetration Testing",
+      nameAr: "استهداف WiFi/APs واختبار الاختراق",
+      icon: Wifi,
+      description: "WiFi and Access Point security testing",
+      status: "READY",
+      emoji: "📡",
+      riskLevel: "high",
+    },
+    {
+      id: "osint-tools",
+      name: "OSINT Deep Search",
+      nameAr: "أدوات OSINT للبحث العميق",
+      icon: Globe,
+      description: "Open Source Intelligence gathering",
+      status: "ACTIVE",
+      emoji: "🛰️",
+      riskLevel: "low",
+    },
+    {
+      id: "mac-spoof",
+      name: "MAC/ARP Spoofing",
+      nameAr: "انتحال MAC/ARP/Spoof",
+      icon: Network,
+      description: "MAC and ARP address spoofing tools",
+      status: "READY",
+      emoji: "🎭",
+      riskLevel: "high",
+    },
+    {
+      id: "cve-exploit",
+      name: "CVE Exploiter",
+      nameAr: "استغلال الثغرات المعروفة",
+      icon: Bug,
+      description: "Known CVE vulnerability exploitation",
+      status: "DISABLED",
+      emoji: "💥",
+      riskLevel: "critical",
+    },
       emoji: "💣",
     },
     {
