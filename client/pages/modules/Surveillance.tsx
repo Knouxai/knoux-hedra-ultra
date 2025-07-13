@@ -174,60 +174,6 @@ export default function Surveillance() {
     return () => clearInterval(interval);
   }, []);
 
-  const startToolMonitoring = async (toolId: string, endpoint: string) => {
-    setToolStatuses((prev) => ({ ...prev, [toolId]: "WATCHING" }));
-
-    try {
-      const response = await fetch(`/api${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "start" }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setToolStatuses((prev) => ({
-          ...prev,
-          [toolId]: data.status || "WATCHING",
-        }));
-
-        // إضافة لوج للبدء
-        const newLog: SurveillanceLog = {
-          timestamp: new Date().toISOString(),
-          tool: toolId,
-          message: `Tool started successfully`,
-          level: "info",
-        };
-        setSurveillanceLogs((prev) => [newLog, ...prev]);
-      }
-    } catch (error) {
-      console.error(`Error starting ${toolId}:`, error);
-      setToolStatuses((prev) => ({ ...prev, [toolId]: "IDLE" }));
-    }
-  };
-
-  const stopToolMonitoring = async (toolId: string, endpoint: string) => {
-    try {
-      const response = await fetch(`/api${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "stop" }),
-      });
-
-      setToolStatuses((prev) => ({ ...prev, [toolId]: "IDLE" }));
-
-      const newLog: SurveillanceLog = {
-        timestamp: new Date().toISOString(),
-        tool: toolId,
-        message: `Tool stopped`,
-        level: "info",
-      };
-      setSurveillanceLogs((prev) => [newLog, ...prev]);
-    } catch (error) {
-      console.error(`Error stopping ${toolId}:`, error);
-    }
-  };
-
   const startAllMonitoring = async () => {
     setIsMonitoringAll(true);
     try {
@@ -426,10 +372,10 @@ export default function Surveillance() {
           </div>
         </div>
 
-        {/* منطقة اللوجات الحية */}
+        {/* منطقة اللوجات ا��حية */}
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
           <h2 className="text-2xl font-bold text-orange-400 mb-4">
-            📋 سجل المراقبة الحي
+            📋 سجل ��لمراقبة الحي
           </h2>
           <div className="bg-black/50 rounded-lg p-4 h-64 overflow-y-auto font-mono text-sm">
             {surveillanceLogs.length === 0 ? (
