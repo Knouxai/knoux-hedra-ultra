@@ -313,18 +313,12 @@ export default function Surveillance() {
               <h3 className="text-lg font-semibold text-blue-400">CPU</h3>
               <Activity className="w-5 h-5 text-blue-400" />
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Usage:</span>
-                <span className="font-mono">{systemStats.cpu.toFixed(1)}%</span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-blue-400 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemStats.cpu}%` }}
-                />
-              </div>
-            </div>
+            <ProgressBar
+              value={systemStats.cpu}
+              label="Usage"
+              color="blue"
+              animated={systemStats.cpu > 80}
+            />
           </div>
 
           <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
