@@ -116,7 +116,7 @@ export default function Surveillance() {
     },
   ];
 
-  // جلب إحصائيات النظام كل 2 ثانية
+  // جلب إحصائيات النظام ك�� 2 ثانية
   useEffect(() => {
     const fetchSystemStats = async () => {
       try {
@@ -326,20 +326,12 @@ export default function Surveillance() {
               <h3 className="text-lg font-semibold text-green-400">Memory</h3>
               <Monitor className="w-5 h-5 text-green-400" />
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Usage:</span>
-                <span className="font-mono">
-                  {systemStats.memory.toFixed(1)}%
-                </span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-green-400 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemStats.memory}%` }}
-                />
-              </div>
-            </div>
+            <ProgressBar
+              value={systemStats.memory}
+              label="Usage"
+              color="green"
+              animated={systemStats.memory > 85}
+            />
           </div>
 
           <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
