@@ -116,7 +116,7 @@ export default function Surveillance() {
     },
   ];
 
-  // جلب إحصائيات النظام ك�� 2 ثانية
+  // جلب إحصائيات النظام كل 2 ثانية
   useEffect(() => {
     const fetchSystemStats = async () => {
       try {
@@ -339,20 +339,12 @@ export default function Surveillance() {
               <h3 className="text-lg font-semibold text-yellow-400">Disk</h3>
               <Shield className="w-5 h-5 text-yellow-400" />
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Usage:</span>
-                <span className="font-mono">
-                  {systemStats.disk.toFixed(1)}%
-                </span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${systemStats.disk}%` }}
-                />
-              </div>
-            </div>
+            <ProgressBar
+              value={systemStats.disk}
+              label="Usage"
+              color="yellow"
+              animated={systemStats.disk > 90}
+            />
           </div>
 
           <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6">
