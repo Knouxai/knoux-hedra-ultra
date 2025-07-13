@@ -1,0 +1,60 @@
+{
+  "tool": "SystemWatchdog",
+  "status": "READY",
+  "lastUpdate": "2024-01-20T12:00:00Z",
+  "health": {
+    "overall": "HEALTHY",
+    "components": {
+      "processMonitor": "OPERATIONAL",
+      "resourceMonitor": "OPERATIONAL",
+      "networkMonitor": "OPERATIONAL",
+      "alertSystem": "OPERATIONAL",
+      "logging": "OPERATIONAL"
+    }
+  },
+  "metrics": {
+    "totalMonitoringSessions": 0,
+    "totalAlertsGenerated": 0,
+    "averageSessionDuration": 0,
+    "lastSessionDuration": 0,
+    "systemResourceUsage": {
+      "cpu": 0.5,
+      "memory": 12.3,
+      "disk": 0.1
+    }
+  },
+  "configuration": {
+    "version": "1.0.0",
+    "lastConfigUpdate": "2024-01-20T12:00:00Z",
+    "activeProfile": "default",
+    "monitoringEnabled": true
+  },
+  "session": {
+    "isRunning": false,
+    "startTime": null,
+    "expectedEndTime": null,
+    "currentDuration": 0,
+    "alertsInSession": 0
+  },
+  "capabilities": {
+    "processMonitoring": true,
+    "resourceMonitoring": true,
+    "networkMonitoring": true,
+    "behaviorAnalysis": false,
+    "realTimeAlerts": true,
+    "historicalData": true,
+    "exportData": true,
+    "customThresholds": true
+  },
+  "errors": [],
+  "warnings": [],
+  "lastError": null,
+  "uptime": 0,
+  "environment": {
+    "platform": "cross-platform",
+    "architecture": "x64",
+    "privileges": "user",
+    "networkAccess": true,
+    "diskSpace": "available"
+  }
+}
