@@ -3,6 +3,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleExecuteTool } from "./routes/execute-tool";
 import surveillanceRouter from "./routes/surveillance";
+import offensiveToolsRouter from "./routes/offensive-tools";
 
 export function createServer() {
   const app = express();
