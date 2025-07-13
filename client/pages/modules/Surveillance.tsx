@@ -9,6 +9,8 @@ import {
   Monitor,
   AlertTriangle,
 } from "lucide-react";
+import WatchButton from "../../components/WatchButton";
+import ProgressBar from "../../components/ProgressBar";
 
 interface SystemStats {
   cpu: number;
