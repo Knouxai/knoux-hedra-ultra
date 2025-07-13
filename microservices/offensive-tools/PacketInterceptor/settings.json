@@ -1,128 +1,44 @@
 {
   "tool": "PacketInterceptor",
   "version": "1.0.0",
-  "module": "offensive-tools",
-  "category": "network-analysis",
-  "riskLevel": "high",
-  "configuration": {
+  "description": "Advanced network packet sniffer and analyzer",
+  "category": "offensive",
+  "platform": ["windows", "linux"],
+  "riskLevel": "HIGH",
+  "requiresElevatedPrivileges": true,
+  "settings": {
     "capture": {
       "defaultInterface": "auto",
       "defaultDuration": 60,
       "maxDuration": 3600,
-      "defaultMaxPackets": 1000,
-      "maxMaxPackets": 100000,
-      "enableRealTimeMonitoring": true,
-      "autoSelectInterface": true
+      "bufferSize": "10MB",
+      "enablePromiscuous": true
     },
     "filtering": {
-      "enableTargetFiltering": true,
-      "supportedProtocols": [
-        "TCP",
-        "UDP",
-        "ICMP",
-        "ARP",
-        "HTTP",
-        "HTTPS",
-        "DNS"
-      ],
-      "customFilters": [],
-      "presetFilters": {
-        "web_traffic": "port 80 or port 443",
-        "dns_traffic": "port 53",
-        "ssh_traffic": "port 22",
-        "email_traffic": "port 25 or port 110 or port 143 or port 993 or port 995"
-      }
+      "enableFiltering": false,
+      "protocolFilter": "all",
+      "portFilter": "",
+      "hostFilter": "",
+      "customBPF": ""
     },
     "analysis": {
-      "enableProtocolAnalysis": true,
-      "enableTopTalkersAnalysis": true,
-      "enableSuspiciousActivityDetection": true,
-      "suspiciousActivityThresholds": {
-        "highConnectionCount": 50,
-        "unusualPortActivity": 5,
-        "suspiciousProtocolUsage": 10
-      }
+      "enableRealTimeAnalysis": true,
+      "detectSuspiciousActivity": true,
+      "enableStatistics": true,
+      "enableProtocolDecoding": false
     },
-    "output": {
-      "saveCaptures": true,
-      "captureDirectory": "./captures",
-      "generateAnalysisReport": true,
-      "generateJSON": true,
-      "generateTXT": true,
-      "generatePCAP": true,
-      "compressOldCaptures": true,
-      "retentionDays": 7
+    "outputs": {
+      "outputDirectory": "results/offensive/PacketInterceptor",
+      "saveRawCapture": true,
+      "enableJSONReport": true,
+      "enablePCAPOutput": true,
+      "compressionEnabled": false
     },
-    "security": {
-      "requireAdminPrivileges": true,
-      "enableRateLimiting": true,
-      "maxCapturesPerHour": 10,
-      "enableAuditLogging": true,
-      "restrictTargetNetworks": true,
-      "allowedNetworks": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
-      "requiredPermissions": ["network_capture", "packet_analysis"]
-    },
-    "monitoring": {
-      "enableRealTimeAlerts": true,
-      "alertOnSuspiciousActivity": true,
-      "alertOnHighTrafficVolume": true,
-      "trafficVolumeThreshold": "100MB",
-      "webhookURL": "",
-      "emailAlerts": false
+    "safety": {
+      "requireConfirmation": true,
+      "maxCaptureSize": "100MB",
+      "enableDataSanitization": true,
+      "preventDataLeakage": true
     }
-  },
-  "platform": {
-    "windows": {
-      "executable": "run.ps1",
-      "shell": "powershell.exe",
-      "requiredTools": ["netsh", "netstat"],
-      "captureMethod": "netsh_trace",
-      "privilegesRequired": "Administrator"
-    },
-    "linux": {
-      "executable": "run.sh",
-      "shell": "/bin/bash",
-      "requiredPackages": ["tcpdump", "netstat", "ss", "iproute2"],
-      "captureMethod": "tcpdump",
-      "privilegesRequired": "root"
-    }
-  },
-  "packetAnalysis": {
-    "enableDeepPacketInspection": false,
-    "enableProtocolDecoding": true,
-    "enablePayloadAnalysis": false,
-    "supportedFormats": ["pcap", "pcapng"],
-    "analysisEngines": ["tcpdump", "netstat", "ss"]
-  },
-  "reporting": {
-    "includePacketStatistics": true,
-    "includeProtocolBreakdown": true,
-    "includeTopTalkers": true,
-    "includeSuspiciousActivity": true,
-    "includeNetworkTopology": false,
-    "includePerformanceMetrics": true,
-    "generateGraphs": false
-  },
-  "compliance": {
-    "dataRetentionPolicy": "7 days",
-    "encryptStoredData": false,
-    "anonymizeData": false,
-    "complianceStandards": ["ISO27001", "NIST"],
-    "auditTrail": true
-  },
-  "metadata": {
-    "author": "KNOUX7 Cyber Team",
-    "description": "Advanced network packet capture and analysis tool",
-    "tags": [
-      "packet-capture",
-      "network-analysis",
-      "traffic-monitoring",
-      "security-analysis"
-    ],
-    "license": "KNOUX7 Commercial License",
-    "documentation": "https://knoux7.com/docs/packetinterceptor",
-    "supportContact": "support@knoux7.com"
-  },
-  "lastModified": "2024-01-15T12:00:00Z",
-  "configVersion": "1.0.0"
+  }
 }
