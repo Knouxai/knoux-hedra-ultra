@@ -24,7 +24,7 @@ class ApiService {
 
   async get(endpoint: string, options: RequestInit = {}): Promise<Response> {
     try {
-      return await fetch(this.getFullUrl(endpoint), {
+      const response = await fetch(this.getFullUrl(endpoint), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -32,8 +32,22 @@ class ApiService {
         },
         ...options,
       });
+
+      if (!response.ok && response.status >= 500) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      return response;
     } catch (error) {
       console.error(`API GET error for ${endpoint}:`, error);
+
+      // For network errors, provide a more specific error message
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error(
+          `Network error: Unable to connect to server. Please check your connection.`,
+        );
+      }
+
       throw error;
     }
   }
