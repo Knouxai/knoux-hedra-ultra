@@ -136,7 +136,7 @@ class EncryptionService {
 
         console.log(`✅ Loaded ${this.keyPairs.size} key pairs`);
       } else {
-        // إنشاء زوج مفاتيح افتراضي
+        // إنشاء ز��ج مفاتيح افتراضي
         this.generateRSAKeyPair("default");
       }
     } catch (error) {
@@ -160,13 +160,16 @@ class EncryptionService {
       : this.masterKey;
 
     const iv = crypto.randomBytes(this.config.ivLength);
-    const cipher = crypto.createCipher(this.config.algorithm, encryptionKey);
-    cipher.setAutoPadding(true);
+    const cipher = crypto.createCipherGCM(
+      this.config.algorithm,
+      encryptionKey,
+      iv,
+    );
 
     let encrypted = cipher.update(data, "utf8", "base64");
     encrypted += cipher.final("base64");
 
-    const tag = (cipher as any).getAuthTag?.();
+    const tag = cipher.getAuthTag();
 
     const result: EncryptedData = {
       data: encrypted,
@@ -182,7 +185,7 @@ class EncryptionService {
     return result;
   }
 
-  // فك تشفير البيانات
+  // فك تشفير الب��انات
   public decrypt(encryptedData: EncryptedData, additionalKey?: string): string {
     if (!this.masterKey) {
       throw new Error("Master key not initialized");
@@ -196,15 +199,15 @@ class EncryptionService {
           )
         : this.masterKey;
 
-      const decipher = crypto.createDecipher(
+      const iv = Buffer.from(encryptedData.iv, "base64");
+      const decipher = crypto.createDecipherGCM(
         encryptedData.algorithm,
         encryptionKey,
+        iv,
       );
 
       if (encryptedData.tag) {
-        (decipher as any).setAuthTag?.(
-          Buffer.from(encryptedData.tag, "base64"),
-        );
+        decipher.setAuthTag(Buffer.from(encryptedData.tag, "base64"));
       }
 
       let decrypted = decipher.update(encryptedData.data, "base64", "utf8");
@@ -236,9 +239,10 @@ class EncryptionService {
         }
 
         const iv = crypto.randomBytes(this.config.ivLength);
-        const cipher = crypto.createCipher(
+        const cipher = crypto.createCipherGCM(
           this.config.algorithm,
           encryptionKey,
+          iv,
         );
 
         const input = fs.createReadStream(inputPath);
@@ -289,9 +293,26 @@ class EncryptionService {
         const iv = Buffer.alloc(this.config.ivLength);
         input.read(this.config.ivLength);
 
-        const decipher = crypto.createDecipher(
+        const input = fs.createReadStream(inputPath);
+        const iv = Buffer.alloc(this.config.ivLength);
+
+        // قراءة IV من بداية الملف
+        await new Promise((resolve, reject) => {
+          input.once("readable", () => {
+            const chunk = input.read(this.config.ivLength);
+            if (chunk) {
+              chunk.copy(iv);
+              resolve(void 0);
+            } else {
+              reject(new Error("Cannot read IV from file"));
+            }
+          });
+        });
+
+        const decipher = crypto.createDecipherGCM(
           this.config.algorithm,
           encryptionKey,
+          iv,
         );
 
         input.pipe(decipher).pipe(output);
