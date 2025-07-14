@@ -12,12 +12,33 @@ import {
   AlertTriangle,
   Activity,
   Server,
+  Terminal,
+  Search,
+  Router,
+  Smartphone,
+  Monitor,
+  Radio,
+  Eye,
+  Download,
+  Settings,
+  Database,
+  Bell,
+  Layers,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Pause,
+  Play,
+  Power,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function NetworkControl() {
+  const { language, t } = useLanguage();
   const [activeTools, setActiveTools] = useState<string[]>([]);
   const [vpnStatus, setVpnStatus] = useState("disconnected");
+  const [vpnProfiles, setVpnProfiles] = useState<any[]>([]);
   const [connectionSpeed, setConnectionSpeed] = useState({
     download: 0,
     upload: 0,
@@ -25,6 +46,13 @@ export default function NetworkControl() {
   });
   const [networkDevices, setNetworkDevices] = useState<any[]>([]);
   const [selectedVpnServer, setSelectedVpnServer] = useState("auto");
+  const [toolExecutionLogs, setToolExecutionLogs] = useState<any[]>([]);
+  const [networkStats, setNetworkStats] = useState({
+    totalPackets: 0,
+    activePorts: 0,
+    bandwidthUsage: 0,
+    connectedDevices: 0,
+  });
 
   const toggleTool = (toolId: string) => {
     setActiveTools((prev) =>
@@ -66,103 +94,279 @@ export default function NetworkControl() {
     }, 5000);
   };
 
-  // Simulate network discovery
+  // Initialize VPN profiles and network discovery
   useEffect(() => {
+    const profiles = [
+      {
+        id: "corp-vpn",
+        name: "Corporate VPN",
+        serverAddress: "vpn.company.com",
+        tunnelType: "IKEv2",
+        status: "ready",
+        encryption: "AES-256",
+      },
+      {
+        id: "wireguard-home",
+        name: "WireGuard Home",
+        serverAddress: "192.168.100.1",
+        tunnelType: "WireGuard",
+        status: "ready",
+        encryption: "ChaCha20",
+      },
+      {
+        id: "openvpn-secure",
+        name: "OpenVPN Secure",
+        serverAddress: "secure.vpnprovider.com",
+        tunnelType: "OpenVPN",
+        status: "ready",
+        encryption: "AES-256-CBC",
+      },
+    ];
+    setVpnProfiles(profiles);
+
     const devices = [
-      { ip: "192.168.1.1", name: "Router", type: "gateway", status: "online" },
+      {
+        ip: "192.168.1.1",
+        name: "Router-Gateway",
+        type: "gateway",
+        status: "online",
+        mac: "00:1B:44:11:3A:B7",
+        openPorts: [80, 443, 22],
+        os: "Linux",
+      },
       {
         ip: "192.168.1.2",
         name: "Desktop-PC",
         type: "computer",
         status: "online",
+        mac: "8C:16:45:2B:9F:43",
+        openPorts: [445, 135, 3389],
+        os: "Windows 11",
       },
       {
         ip: "192.168.1.15",
         name: "iPhone-12",
         type: "mobile",
         status: "online",
+        mac: "F0:18:98:04:E2:1A",
+        openPorts: [],
+        os: "iOS 17",
       },
-      { ip: "192.168.1.23", name: "Smart-TV", type: "iot", status: "online" },
+      {
+        ip: "192.168.1.23",
+        name: "Smart-TV",
+        type: "iot",
+        status: "online",
+        mac: "AC:87:A3:1F:8B:2C",
+        openPorts: [80, 8080],
+        os: "Android TV",
+      },
       {
         ip: "192.168.1.45",
         name: "Unknown-Device",
         type: "unknown",
         status: "suspicious",
+        mac: "??:??:??:??:??:??",
+        openPorts: [22, 8080, 9999],
+        os: "Unknown",
       },
     ];
     setNetworkDevices(devices);
+
+    // Initialize network stats
+    setNetworkStats({
+      totalPackets: 2500345,
+      activePorts: 47,
+      bandwidthUsage: 75.4,
+      connectedDevices: devices.length,
+    });
   }, []);
+
+  const executeNetworkTool = async (toolId: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setToolExecutionLogs((prev) => [
+      {
+        id: Date.now(),
+        tool: toolId,
+        timestamp,
+        status: "executing",
+        output: `[${timestamp}] Executing ${toolId}...`,
+      },
+      ...prev.slice(0, 9),
+    ]);
+
+    // Simulate tool execution delay
+    setTimeout(() => {
+      const simulatedOutput = generateToolOutput(toolId);
+      setToolExecutionLogs((prev) =>
+        prev.map((log) =>
+          log.id === Date.now() - 2000
+            ? { ...log, status: "completed", output: simulatedOutput }
+            : log,
+        ),
+      );
+    }, 2000);
+  };
+
+  const generateToolOutput = (toolId: string) => {
+    const outputs = {
+      "dns-recon":
+        "[SUCCESS] DNS records found: A: 93.184.216.34, MX: mail.example.com (Priority: 10)",
+      "port-scanner":
+        "[SUCCESS] Open ports detected: 22 (SSH), 80 (HTTP), 443 (HTTPS)",
+      "network-mapper":
+        "[SUCCESS] Network topology mapped: 5 devices discovered, 2 gateways identified",
+      "wifi-scanner":
+        "[SUCCESS] Wi-Fi networks found: 8 networks, 3 secured (WPA3), 2 open",
+      "ping-scanner":
+        "[SUCCESS] Live hosts: 192.168.1.1-5, Average latency: 12ms",
+      "vpn-manager": `[SUCCESS] VPN profile loaded: ${selectedVpnServer}, Encryption: AES-256`,
+      "bandwidth-test":
+        "[SUCCESS] Speed test completed: ↓ 95.4 Mbps, ↑ 45.2 Mbps, Ping: 12ms",
+      "firewall-tester":
+        "[SUCCESS] Firewall rules verified: 24 active rules, 3 blocked connections",
+      "proxy-checker":
+        "[WARNING] Proxy detected on port 8080, investigating...",
+      "latency-monitor":
+        "[INFO] Network latency stable: Avg 15ms, Max 28ms, Min 8ms",
+    };
+    return (
+      outputs[toolId] || "[SUCCESS] Tool execution completed successfully."
+    );
+  };
 
   const networkTools = [
     {
+      id: "dns-recon",
+      name: "DNS Reconnaissance",
+      nameAr: "استطلاع DNS",
+      icon: Search,
+      description: "Query DNS records for domains (A, MX, NS, TXT)",
+      status: "READY",
+      emoji: "📡",
+      category: "discovery",
+      scriptFile: "dns-recon.ps1",
+    },
+    {
+      id: "port-scanner",
+      name: "Advanced Port Scanner",
+      nameAr: "مسح المنافذ المتقدم",
+      icon: Zap,
+      description: "TCP/UDP port scanning with service detection",
+      status: "READY",
+      emoji: "🌐",
+      category: "discovery",
+      scriptFile: "port-scanner.ps1",
+    },
+    {
       id: "network-mapper",
-      name: "Network Mapper",
+      name: "Network Topology Mapper",
       nameAr: "رسم خريطة الشبكة",
       icon: Map,
-      description: "Detailed local network topology mapping",
+      description: "Detailed network topology mapping and visualization",
       status: "READY",
       emoji: "🗺️",
       category: "discovery",
+      scriptFile: "map-network-topology.ps1",
     },
     {
-      id: "vpn-control",
-      name: "Internal VPN Control",
-      nameAr: "تفعيل VPN داخلي",
+      id: "ping-scanner",
+      name: "Ping Scanner",
+      nameAr: "مسح Ping للشبكة",
+      icon: Activity,
+      description: "ICMP ping sweep for live host discovery",
+      status: "READY",
+      emoji: "📡",
+      category: "discovery",
+      scriptFile: "ping-scanner.ps1",
+    },
+    {
+      id: "wifi-scanner",
+      name: "Wireless Scanner",
+      nameAr: "مسح الشبكات اللاسلكية",
+      icon: Wifi,
+      description: "Wi-Fi network discovery with security analysis",
+      status: "SCANNING",
+      emoji: "📶",
+      category: "wireless",
+      scriptFile: "scan-wifi.ps1",
+    },
+    {
+      id: "vpn-manager",
+      name: "VPN Profile Manager",
+      nameAr: "إدارة ملفات VPN",
       icon: Shield,
-      description: "VPN connection management (WireGuard / OpenVPN)",
+      description: "VPN connection management and profile control",
       status: vpnStatus === "connected" ? "ACTIVE" : "READY",
-      emoji: "🛡️",
+      emoji: "🔄",
       category: "vpn",
+      scriptFile: "manage-vpn.ps1",
     },
     {
-      id: "dns-leak-check",
-      name: "DNS Leak Checker",
-      nameAr: "أدوات DNS Leak Check",
-      icon: Globe,
-      description: "DNS leak detection and privacy protection",
+      id: "firewall-tester",
+      name: "Firewall Rule Tester",
+      nameAr: "اختبار قواعد الجدار الناري",
+      icon: Lock,
+      description: "Test firewall rules and connectivity",
+      status: "PROTECTING",
+      emoji: "🛡️",
+      category: "security",
+      scriptFile: "test-firewall-rule.ps1",
+    },
+    {
+      id: "proxy-checker",
+      name: "Proxy Detector",
+      nameAr: "كاشف البروكسي",
+      icon: AlertTriangle,
+      description: "Detect suspicious proxies and connections",
       status: "MONITORING",
       emoji: "🌐",
-      category: "privacy",
-    },
-    {
-      id: "proxy-detector",
-      name: "Proxy Detector",
-      nameAr: "اكتشاف اتصال مشبوه أو Proxies",
-      icon: AlertTriangle,
-      description: "Suspicious connection and proxy detection",
-      status: "SCANNING",
-      emoji: "🔍",
       category: "security",
+      scriptFile: "test-proxy.ps1",
     },
     {
-      id: "speed-test",
-      name: "Speed Test",
-      nameAr: "اختبار السرعة والتحميل",
+      id: "bandwidth-test",
+      name: "Bandwidth Tester",
+      nameAr: "اختبار عرض النطاق",
       icon: Gauge,
-      description: "Internet speed and download testing",
+      description: "Internet speed and bandwidth analysis",
       status: "READY",
       emoji: "⚡",
       category: "diagnostic",
+      scriptFile: "test-internet-speed.ps1",
     },
     {
-      id: "lan-defender",
-      name: "LAN Defender",
-      nameAr: "حماية الشبكة المحلية",
-      icon: Lock,
-      description: "Local area network threat protection",
-      status: "PROTECTING",
-      emoji: "🔐",
-      category: "security",
+      id: "latency-monitor",
+      name: "Latency Monitor",
+      nameAr: "مراقب زمن الاستجابة",
+      icon: Clock,
+      description: "Real-time network latency monitoring",
+      status: "MONITORING",
+      emoji: "🔗",
+      category: "diagnostic",
+      scriptFile: "monitor-latency.ps1",
     },
     {
-      id: "webrtc-blocker",
-      name: "WebRTC Blocker",
-      nameAr: "WebRTC Leak Blocker",
-      icon: Wifi,
-      description: "WebRTC leak prevention and IP protection",
-      status: "BLOCKING",
-      emoji: "🚫",
-      category: "privacy",
+      id: "ssh-client",
+      name: "SSH Client",
+      nameAr: "عميل SSH",
+      icon: Terminal,
+      description: "Secure shell connection management",
+      status: "READY",
+      emoji: "💻",
+      category: "remote",
+      scriptFile: "connect-ssh.ps1",
+    },
+    {
+      id: "rdp-client",
+      name: "Remote Desktop",
+      nameAr: "سطح المكتب البعيد",
+      icon: Monitor,
+      description: "Windows Remote Desktop connection",
+      status: "READY",
+      emoji: "🖥️",
+      category: "remote",
+      scriptFile: "launch-rdp.ps1",
     },
   ];
 
@@ -299,7 +503,10 @@ export default function NetworkControl() {
                     <div
                       key={tool.id}
                       className="glass-card rounded-xl p-4 group cursor-pointer hover:scale-105 transition-all duration-300"
-                      onClick={() => toggleTool(tool.id)}
+                      onClick={() => {
+                        toggleTool(tool.id);
+                        executeNetworkTool(tool.id);
+                      }}
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div
@@ -336,10 +543,10 @@ export default function NetworkControl() {
                           isActive ? "text-blue-400" : "text-cyber-neon"
                         } mb-1`}
                       >
-                        {tool.name}
+                        {language === "ar" ? tool.nameAr : tool.name}
                       </h4>
                       <h5 className="text-xs text-cyber-purple-light mb-2 font-mono">
-                        {tool.nameAr}
+                        {tool.scriptFile}
                       </h5>
                       <p className="text-cyber-purple-light text-xs mb-3">
                         {tool.description}
@@ -378,15 +585,15 @@ export default function NetworkControl() {
 
             {/* VPN & Network Info */}
             <div className="lg:col-span-1 space-y-6">
-              {/* VPN Control Panel */}
+              {/* Enhanced VPN Control Panel */}
               <div className="glass-card rounded-xl p-4">
                 <h3 className="text-lg font-bold text-blue-400 mb-4">
-                  VPN Control Panel
+                  {language === "ar" ? "لوحة تحكم VPN" : "VPN Control Panel"}
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-cyber-glass/30 rounded-lg">
                     <span className="text-sm text-cyber-purple-light">
-                      Status
+                      {language === "ar" ? "الحالة" : "Status"}
                     </span>
                     <span
                       className={`text-sm font-bold ${
@@ -404,7 +611,7 @@ export default function NetworkControl() {
 
                   <div>
                     <label className="text-sm text-cyber-purple-light mb-2 block">
-                      Server Location
+                      {language === "ar" ? "موقع الخادم" : "Server Location"}
                     </label>
                     <select
                       value={selectedVpnServer}
@@ -421,6 +628,39 @@ export default function NetworkControl() {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* VPN Profiles */}
+                  <div>
+                    <label className="text-sm text-cyber-purple-light mb-2 block">
+                      {language === "ar"
+                        ? "ملفات VPN المحفوظة"
+                        : "Saved VPN Profiles"}
+                    </label>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {vpnProfiles.map((profile) => (
+                        <div
+                          key={profile.id}
+                          className="p-2 bg-cyber-glass/20 rounded-lg flex items-center justify-between text-xs"
+                        >
+                          <div>
+                            <div className="text-cyber-neon font-mono">
+                              {profile.name}
+                            </div>
+                            <div className="text-cyber-purple-light">
+                              {profile.tunnelType} - {profile.encryption}
+                            </div>
+                          </div>
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              profile.status === "connected"
+                                ? "bg-green-400"
+                                : "bg-blue-400"
+                            }`}
+                          ></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <button
@@ -477,36 +717,103 @@ export default function NetworkControl() {
                 </div>
               </div>
 
-              {/* Network Devices */}
+              {/* Enhanced Network Devices */}
               <div className="glass-card rounded-xl p-4">
                 <h3 className="text-lg font-bold text-blue-400 mb-4">
-                  Network Devices
+                  {language === "ar" ? "أجهزة الشبكة" : "Network Devices"}
                 </h3>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {networkDevices.map((device, idx) => (
                     <div
                       key={idx}
-                      className="p-2 bg-cyber-glass/30 rounded-lg flex items-center justify-between"
+                      className="p-3 bg-cyber-glass/30 rounded-lg hover:bg-cyber-glass/40 transition-all cursor-pointer"
                     >
-                      <div>
-                        <div className="text-xs font-mono text-cyber-neon">
-                          {device.name}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {device.type === "gateway" && (
+                            <Router className="w-4 h-4 text-blue-400" />
+                          )}
+                          {device.type === "computer" && (
+                            <Monitor className="w-4 h-4 text-green-400" />
+                          )}
+                          {device.type === "mobile" && (
+                            <Smartphone className="w-4 h-4 text-yellow-400" />
+                          )}
+                          {device.type === "iot" && (
+                            <Radio className="w-4 h-4 text-purple-400" />
+                          )}
+                          {device.type === "unknown" && (
+                            <AlertTriangle className="w-4 h-4 text-red-400" />
+                          )}
+                          <div>
+                            <div className="text-xs font-mono text-cyber-neon">
+                              {device.name}
+                            </div>
+                            <div className="text-xs text-cyber-purple-light">
+                              {device.ip} • {device.mac}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-xs text-cyber-purple-light">
-                          {device.ip}
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-cyber-purple-light">
+                            {device.openPorts.length} ports
+                          </span>
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              device.status === "online"
+                                ? "bg-green-400"
+                                : device.status === "suspicious"
+                                  ? "bg-red-400 animate-pulse"
+                                  : "bg-gray-400"
+                            }`}
+                          ></div>
                         </div>
                       </div>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          device.status === "online"
-                            ? "bg-green-400"
-                            : device.status === "suspicious"
-                              ? "bg-red-400 animate-pulse"
-                              : "bg-gray-400"
-                        }`}
-                      ></div>
+                      <div className="mt-2 text-xs text-cyber-purple-light">
+                        OS: {device.os} • Ports:{" "}
+                        {device.openPorts.join(", ") || "None"}
+                      </div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Tool Execution Logs */}
+              <div className="glass-card rounded-xl p-4">
+                <h3 className="text-lg font-bold text-blue-400 mb-4">
+                  {language === "ar"
+                    ? "سجل تنفيذ الأدوات"
+                    : "Tool Execution Logs"}
+                </h3>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {toolExecutionLogs.length > 0 ? (
+                    toolExecutionLogs.map((log) => (
+                      <div
+                        key={log.id}
+                        className="p-2 bg-cyber-glass/20 rounded text-xs font-mono"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          {log.status === "executing" && (
+                            <Clock className="w-3 h-3 text-yellow-400 animate-spin" />
+                          )}
+                          {log.status === "completed" && (
+                            <CheckCircle className="w-3 h-3 text-green-400" />
+                          )}
+                          {log.status === "failed" && (
+                            <XCircle className="w-3 h-3 text-red-400" />
+                          )}
+                          <span className="text-cyber-purple-light">
+                            {log.timestamp}
+                          </span>
+                        </div>
+                        <div className="text-cyber-neon">{log.output}</div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-xs text-cyber-purple-light text-center py-4">
+                      {language === "ar" ? "لا توجد سجلات بعد" : "No logs yet"}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
