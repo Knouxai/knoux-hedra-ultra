@@ -10,7 +10,7 @@ import WebSocketService from "./services/WebSocketService";
 
 export function createServer() {
   const app = express();
-  const httpServer = createServer(app);
+  const httpServer = createHttpServer(app);
 
   // إنشاء خدمة WebSocket
   const wsService = new WebSocketService(httpServer);
