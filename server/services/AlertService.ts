@@ -406,7 +406,8 @@ class AlertService {
       to: channel.config.to,
       subject: `${channel.config.subject} - ${alert.title}`,
       html: htmlContent,
-      priority: alert.severity === "CRITICAL" ? "high" : "normal",
+      priority:
+        alert.severity === "CRITICAL" ? ("high" as const) : ("normal" as const),
     };
 
     try {
