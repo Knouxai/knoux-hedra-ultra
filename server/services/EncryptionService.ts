@@ -273,7 +273,7 @@ class EncryptionService {
     outputPath: string,
     password?: string,
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const encryptionKey = password
           ? this.deriveKeyFromPassword(
