@@ -207,7 +207,9 @@ class EncryptionService {
       );
 
       if (encryptedData.tag) {
-        decipher.setAuthTag(Buffer.from(encryptedData.tag, "base64"));
+        (decipher as any).setAuthTag?.(
+          Buffer.from(encryptedData.tag, "base64"),
+        );
       }
 
       let decrypted = decipher.update(encryptedData.data, "base64", "utf8");
@@ -561,7 +563,7 @@ class EncryptionService {
       data.fill(pattern);
     }
 
-    // الكتابة النهائية ببيانات عشوائية
+    // الكتابة النهائية ببيانات عشوائ��ة
     crypto.randomFillSync(data);
   }
 
