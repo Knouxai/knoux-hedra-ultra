@@ -1,4 +1,4 @@
-// نظام إدارة الصلاحيات والأدوار - RBAC
+// نظام إ��ارة الصلاحيات والأدوار - RBAC
 export type UserRole = "admin" | "operator" | "analyst" | "viewer";
 
 export type Permission =
@@ -154,7 +154,7 @@ class PermissionService {
     }
   }
 
-  // تسجيل خروج المستخدم
+  // تسجيل خ��وج المستخدم
   async logout(): Promise<void> {
     if (this.currentUser) {
       this.logSecurityEvent({
@@ -369,6 +369,8 @@ class PermissionService {
 
 // إنشاء مثيل واحد للخدمة
 export const permissionService = new PermissionService();
+
+import React from "react";
 
 // Hook لاستخدام الصلاحيات في React
 export function usePermissions() {
