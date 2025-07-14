@@ -13,6 +13,7 @@ import LanguageSettings from "./pages/LanguageSettings";
 
 // 7 Main Module Pages
 import DefensiveOps from "./pages/modules/DefensiveOps";
+import DefensiveOpsEnhanced from "./pages/modules/DefensiveOpsEnhanced";
 import OffensiveTools from "./pages/modules/OffensiveTools";
 import Surveillance from "./pages/modules/Surveillance";
 import NetworkControl from "./pages/modules/NetworkControl";
