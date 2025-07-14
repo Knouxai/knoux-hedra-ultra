@@ -21,6 +21,7 @@ import type { Section, LiveStats, DatabaseStructure } from "@shared/types";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Index() {
+  const { t, language, isRTL } = useLanguage();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLiveMode, setIsLiveMode] = useState(true);
   const [selectedSection, setSelectedSection] = useState(0);
