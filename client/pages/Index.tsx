@@ -15,8 +15,10 @@ import {
   RotateCcw,
   Download,
   Upload,
+  Globe,
 } from "lucide-react";
 import type { Section, LiveStats, DatabaseStructure } from "@shared/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Index() {
   const [currentTime, setCurrentTime] = useState(new Date());
