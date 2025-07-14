@@ -288,12 +288,6 @@ class EncryptionService {
 
         const input = fs.createReadStream(inputPath);
         const output = fs.createWriteStream(outputPath);
-
-        // قراءة IV من بداية الملف
-        const iv = Buffer.alloc(this.config.ivLength);
-        input.read(this.config.ivLength);
-
-        const input = fs.createReadStream(inputPath);
         const iv = Buffer.alloc(this.config.ivLength);
 
         // قراءة IV من بداية الملف
