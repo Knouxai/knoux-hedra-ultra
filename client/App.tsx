@@ -57,6 +57,10 @@ const App = () => (
 
             {/* 7 Main Cyber Modules */}
             <Route path="/defensive-ops" element={<DefensiveOps />} />
+            <Route
+              path="/defensive-ops-enhanced"
+              element={<DefensiveOpsEnhanced />}
+            />
             <Route path="/offensive-tools" element={<OffensiveTools />} />
             <Route path="/surveillance" element={<Surveillance />} />
             <Route path="/network-control" element={<NetworkControl />} />
