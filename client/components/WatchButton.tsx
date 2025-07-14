@@ -34,13 +34,7 @@ export default function WatchButton({
     setLastAction(action);
 
     try {
-      const response = await fetch(`/api${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action }),
-      });
+      const response = await apiService.post(`/api${endpoint}`, { action });
 
       if (response.ok) {
         const data = await response.json();
