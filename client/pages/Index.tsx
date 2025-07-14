@@ -316,19 +316,23 @@ export default function Index() {
       {/* Top status bar */}
       <div className="absolute top-4 right-6 z-40 flex items-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <span className="text-cyan-400">active systems</span>
+          <span className="text-cyan-400">{t("dashboard.active_systems")}</span>
           <span className="text-cyan-400 font-bold text-lg">
             {liveStats.activeSystems}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-yellow-400">total warnings</span>
+          <span className="text-yellow-400">
+            {t("dashboard.total_warnings")}
+          </span>
           <span className="text-yellow-400 font-bold text-lg">
             {liveStats.totalWarnings}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-cyan-400">system integration</span>
+          <span className="text-cyan-400">
+            {t("dashboard.system_integration")}
+          </span>
           <span className="text-cyan-400 font-bold text-lg">
             {liveStats.systemIntegration.toFixed(1)}%
           </span>
