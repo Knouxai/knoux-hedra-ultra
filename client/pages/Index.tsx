@@ -132,23 +132,11 @@ export default function Index() {
   // Execute tool function
   const executeTool = async (toolId: string, sectionId: number) => {
     try {
-      const response = await fetch("/api/execute-tool", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          toolId,
-          sectionId,
-          async: true,
-        }),
+      const result = await apiService.postJson("/api/execute-tool", {
+        toolId,
+        sectionId,
+        async: true,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to execute tool");
-      }
-
-      const result = await response.json();
       console.log("Tool execution started:", result);
 
       // Update live stats to show tool execution
