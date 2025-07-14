@@ -256,10 +256,14 @@ export default function Index() {
                 >
                   KNOUX7
                 </h1>
-                <div className="flex items-center gap-2 mt-1">
+                <div
+                  className={`flex items-center gap-2 mt-1 ${isRTL ? "flex-row-reverse" : ""}`}
+                >
                   <span className="text-cyan-400/60 text-sm">.....</span>
                   <span className="text-cyan-400 text-sm font-medium tracking-widest">
-                    INTELLIGENT DEVELOPMENT
+                    {language === "ar"
+                      ? "التطوير الذكي"
+                      : "INTELLIGENT DEVELOPMENT"}
                   </span>
                   <span className="text-cyan-400/60 text-sm">.....</span>
                 </div>
