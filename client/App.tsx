@@ -66,7 +66,9 @@ const App = () => (
             <Route path="/network-control" element={<NetworkControl />} />
             <Route path="/net-vpn-control" element={<NetworkControl />} />
             <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/ai-cyber-assistant" element={<AIAssistant />} />
             <Route path="/reporting" element={<Reporting />} />
+            <Route path="/encrypted-reporting" element={<Reporting />} />
             <Route path="/cosmic-settings" element={<CosmicSettings />} />
 
             {/* Legacy Individual Tools (backwards compatibility) */}
