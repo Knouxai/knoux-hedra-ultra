@@ -3,6 +3,11 @@ import cors from "cors";
 import { createServer as createHttpServer } from "http";
 import { handleDemo } from "./routes/demo";
 import { handleExecuteTool } from "./routes/execute-tool";
+import {
+  handleSystemStats,
+  handleSurveillanceLogs,
+  handleSurveillanceStartAll,
+} from "./routes/system";
 import surveillanceRouter from "./routes/surveillance";
 import offensiveToolsRouter from "./routes/offensive-tools";
 import forensicsRouter from "./routes/forensics";
