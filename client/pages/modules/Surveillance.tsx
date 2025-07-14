@@ -94,7 +94,7 @@ export default function Surveillance() {
     {
       id: "UnauthorizedLoginDetector",
       title: "Login Detector",
-      description: "كشف محاولات تس��يل الدخول غير المصرح بها",
+      description: "كشف محاولات تسجيل الدخول غير المصرح بها",
       icon: <Eye className="w-6 h-6" />,
       endpoint: "/tools/UnauthorizedLoginDetector/watch",
       statusText: "security",
@@ -119,13 +119,12 @@ export default function Surveillance() {
 
   // جلب إحصائيات النظام كل 2 ثانية
   useEffect(() => {
-    const fetchSystemStats = async () => {
+        const fetchSystemStats = async () => {
       try {
-        const response = await fetch("/api/system/stats");
-        if (response.ok) {
-          const data = await response.json();
-          setSystemStats(data);
-        } else {
+        const data = await apiService.getJson("/api/system/stats");
+        setSystemStats(data);
+      } catch (error) {
+        console.warn("Failed to fetch system stats:", error);
           // محا��اة البيانات في حالة عدم توفر API
           setSystemStats({
             cpu: Math.random() * 100,
