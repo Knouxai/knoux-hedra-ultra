@@ -33,6 +33,11 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/execute-tool", handleExecuteTool);
 
+  // System API routes
+  app.get("/api/system/stats", handleSystemStats);
+  app.get("/api/logs/surveillance", handleSurveillanceLogs);
+  app.post("/api/surveillance/start-all", handleSurveillanceStartAll);
+
   // Surveillance and monitoring endpoints
   app.use("/api", surveillanceRouter);
 
