@@ -3,8 +3,17 @@ class ApiService {
   private baseUrl: string;
 
   constructor() {
-    // Use the current origin for the base URL
-    this.baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+    // Use the current origin for the base URL, with fallback for SSR
+    if (typeof window !== "undefined") {
+      this.baseUrl = window.location.origin;
+    } else if (
+      typeof process !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
+      this.baseUrl = "http://localhost:3000";
+    } else {
+      this.baseUrl = "";
+    }
   }
 
   private getFullUrl(endpoint: string): string {
