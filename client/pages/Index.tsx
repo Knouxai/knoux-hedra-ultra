@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { Section, LiveStats, DatabaseStructure } from "@shared/types";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { apiService } from "@/services/ApiService";
 
 export default function Index() {
   const { t, language, isRTL } = useLanguage();
