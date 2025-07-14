@@ -272,6 +272,13 @@ export default function Index() {
                 {currentTime.toLocaleTimeString()}
               </div>
               <div className="flex items-center gap-2">
+                <Link
+                  to="/language-settings"
+                  className="p-2 rounded-lg border border-purple-400/30 bg-purple-400/10 text-purple-400 hover:border-purple-400 transition-all"
+                  title={t("nav.language_settings")}
+                >
+                  <Globe className="w-4 h-4" />
+                </Link>
                 <button
                   onClick={() => setIsLiveMode(!isLiveMode)}
                   className={`p-2 rounded-lg border transition-all ${
