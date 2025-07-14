@@ -77,7 +77,7 @@ class WebSocketService {
       console.log(`Client connected: ${socket.id}`);
       this.connectedClients.set(socket.id, socket);
 
-      // إرسال حالة النظام الحالية للعميل الجديد
+      // إرسال ح��لة النظام الحالية للعميل الجديد
       this.sendInitialData(socket);
 
       // معالجة الأحداث
@@ -101,6 +101,15 @@ class WebSocketService {
         this.sendSystemStats(socket);
       });
 
+      // معالجة تنفيذ الأدوات
+      socket.on("execute_tool", (data) => {
+        this.handleToolExecution(socket, data);
+      });
+
+      socket.on("stop_tool", (data) => {
+        this.handleStopTool(socket, data);
+      });
+
       socket.on("disconnect", () => {
         console.log(`Client disconnected: ${socket.id}`);
         this.connectedClients.delete(socket.id);
@@ -115,7 +124,7 @@ class WebSocketService {
 
   private async sendInitialData(socket: Socket): Promise<void> {
     try {
-      // إرسال حالة النظام
+      // إرسال حا��ة النظام
       await this.sendSystemStats(socket);
 
       // إرسال حالة IDS
