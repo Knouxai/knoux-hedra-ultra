@@ -165,9 +165,7 @@ export default function Surveillance() {
   const startAllMonitoring = async () => {
     setIsMonitoringAll(true);
     try {
-      const response = await fetch("/api/surveillance/start-all", {
-        method: "POST",
-      });
+      const response = await apiService.post("/api/surveillance/start-all");
       if (response.ok) {
         // تحديث حالة جميع الأدوات
         const newStatuses: ToolStatus = {};
