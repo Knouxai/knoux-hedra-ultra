@@ -64,6 +64,7 @@ const App = () => (
             <Route path="/offensive-tools" element={<OffensiveTools />} />
             <Route path="/surveillance" element={<Surveillance />} />
             <Route path="/network-control" element={<NetworkControl />} />
+            <Route path="/net-vpn-control" element={<NetworkControl />} />
             <Route path="/ai-assistant" element={<AIAssistant />} />
             <Route path="/reporting" element={<Reporting />} />
             <Route path="/cosmic-settings" element={<CosmicSettings />} />
