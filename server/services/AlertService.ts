@@ -187,7 +187,7 @@ class AlertService {
   // تهيئة خدمة البريد الإلكتروني
   private initializeEmailService(): void {
     try {
-      this.emailTransporter = nodemailer.createTransporter({
+      this.emailTransporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "localhost",
         port: parseInt(process.env.SMTP_PORT || "587"),
         secure: process.env.SMTP_SECURE === "true",
