@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { createServer } from "http";
+import { createServer as createHttpServer } from "http";
 import { handleDemo } from "./routes/demo";
 import { handleExecuteTool } from "./routes/execute-tool";
 import surveillanceRouter from "./routes/surveillance";
