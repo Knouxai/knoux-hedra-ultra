@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import WatchButton from "../../components/WatchButton";
 import ProgressBar from "../../components/ProgressBar";
+import { apiService } from "@/services/ApiService";
 
 interface SystemStats {
   cpu: number;
@@ -93,7 +94,7 @@ export default function Surveillance() {
     {
       id: "UnauthorizedLoginDetector",
       title: "Login Detector",
-      description: "كشف محاولات تسجيل الدخول غير المصرح بها",
+      description: "كشف محاولات تس��يل الدخول غير المصرح بها",
       icon: <Eye className="w-6 h-6" />,
       endpoint: "/tools/UnauthorizedLoginDetector/watch",
       statusText: "security",
