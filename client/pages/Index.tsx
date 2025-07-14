@@ -580,18 +580,31 @@ export default function Index() {
                       )}
                     </div>
 
-                    <Link
-                      to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/[^\w]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}`}
-                      className="w-full mt-4 p-3 rounded-lg border-2 text-center font-bold transition-all hover:scale-105 block"
-                      style={{
-                        borderColor: sections[selectedSection].color,
-                        color: sections[selectedSection].color,
-                        backgroundColor: sections[selectedSection].color + "10",
-                      }}
-                    >
-                      Launch Module ({sections[selectedSection].tools.length}{" "}
-                      tools)
-                    </Link>
+                    <div className="space-y-2 mt-4">
+                      <Link
+                        to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/[^\w]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}`}
+                        className="w-full p-3 rounded-lg border-2 text-center font-bold transition-all hover:scale-105 block"
+                        style={{
+                          borderColor: sections[selectedSection].color,
+                          color: sections[selectedSection].color,
+                          backgroundColor:
+                            sections[selectedSection].color + "10",
+                        }}
+                      >
+                        Launch Module ({sections[selectedSection].tools.length}{" "}
+                        tools)
+                      </Link>
+
+                      {sections[selectedSection]?.nameEn ===
+                        "Defensive Ops" && (
+                        <Link
+                          to="/defensive-ops-enhanced"
+                          className="w-full p-2 rounded-lg border border-purple-400/50 text-center text-sm transition-all hover:border-purple-400 hover:bg-purple-400/10 block text-purple-400"
+                        >
+                          🚀 Try Enhanced Version (New!)
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
