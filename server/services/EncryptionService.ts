@@ -169,7 +169,7 @@ class EncryptionService {
     let encrypted = cipher.update(data, "utf8", "base64");
     encrypted += cipher.final("base64");
 
-    const tag = cipher.getAuthTag();
+    const tag = (cipher as any).getAuthTag?.();
 
     const result: EncryptedData = {
       data: encrypted,
