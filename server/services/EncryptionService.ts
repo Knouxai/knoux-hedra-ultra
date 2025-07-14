@@ -160,7 +160,7 @@ class EncryptionService {
       : this.masterKey;
 
     const iv = crypto.randomBytes(this.config.ivLength);
-    const cipher = crypto.createCipherGCM(
+    const cipher = crypto.createCipheriv(
       this.config.algorithm,
       encryptionKey,
       iv,
@@ -239,7 +239,7 @@ class EncryptionService {
         }
 
         const iv = crypto.randomBytes(this.config.ivLength);
-        const cipher = crypto.createCipherGCM(
+        const cipher = crypto.createCipheriv(
           this.config.algorithm,
           encryptionKey,
           iv,
