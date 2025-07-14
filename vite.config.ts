@@ -26,12 +26,18 @@ function expressPlugin(): Plugin {
     name: "express-plugin",
     apply: "serve", // Only apply during development (serve mode)
     configureServer(server) {
-      const app = createServer();
+      const expressApp = createServer();
 
       // Add Express app as middleware for API routes
       server.middlewares.use((req, res, next) => {
         if (req.url?.startsWith("/api/")) {
-          app(req, res, next);
+          // Get the express app from the http server
+          const app = expressApp.listeners("request")[0];
+          if (typeof app === "function") {
+            app(req, res);
+          } else {
+            next();
+          }
         } else {
           next();
         }
