@@ -144,11 +144,8 @@ export default function Surveillance() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch("/api/logs/surveillance");
-        if (response.ok) {
-          const data = await response.json();
-          setSurveillanceLogs(data);
-        }
+        const data = await apiService.getJson("/api/logs/surveillance");
+        setSurveillanceLogs(data);
       } catch (error) {
         // محاكاة اللوجات
         const mockLog: SurveillanceLog = {
