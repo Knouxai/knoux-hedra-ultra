@@ -200,7 +200,7 @@ class EncryptionService {
         : this.masterKey;
 
       const iv = Buffer.from(encryptedData.iv, "base64");
-      const decipher = crypto.createDecipherGCM(
+      const decipher = crypto.createDecipheriv(
         encryptedData.algorithm,
         encryptionKey,
         iv,
@@ -303,7 +303,7 @@ class EncryptionService {
           });
         });
 
-        const decipher = crypto.createDecipherGCM(
+        const decipher = crypto.createDecipheriv(
           this.config.algorithm,
           encryptionKey,
           iv,
