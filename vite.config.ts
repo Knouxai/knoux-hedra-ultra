@@ -28,8 +28,14 @@ function expressPlugin(): Plugin {
     configureServer(server) {
       const app = createServer();
 
-      // Add Express app as middleware to Vite dev server for API routes only
-      server.middlewares.use("/api", app);
+      // Add Express app as middleware for API routes
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.startsWith("/api/")) {
+          app(req, res, next);
+        } else {
+          next();
+        }
+      });
     },
   };
 }
