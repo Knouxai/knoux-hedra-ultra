@@ -90,7 +90,7 @@ class EncryptionService {
       salt,
     );
 
-    // حفظ المفتاح المشفر
+    // حفظ ال��فتاح المشفر
     const masterKeyPath = path.join(process.cwd(), ".encryption", "master.key");
     const masterKeyDir = path.dirname(masterKeyPath);
 
@@ -392,10 +392,9 @@ class EncryptionService {
     const dataHash = crypto.createHash("sha256").update(data).digest("hex");
 
     // إنشاء التوقيع
-    const signature = crypto
-      .sign("sha256", Buffer.from(data))
-      .update(data)
-      .sign(keyPair.privateKey, "base64");
+    const signer = crypto.createSign("sha256");
+    signer.update(data);
+    const signature = signer.sign(keyPair.privateKey, "base64");
 
     return {
       signature,
@@ -563,7 +562,7 @@ class EncryptionService {
       data.fill(pattern);
     }
 
-    // الكتابة النهائية ببيانات عشوائ��ة
+    // الكتابة النهائية ببيانات عشوائية
     crypto.randomFillSync(data);
   }
 
