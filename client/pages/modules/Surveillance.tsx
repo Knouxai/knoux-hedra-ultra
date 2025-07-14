@@ -119,21 +119,12 @@ export default function Surveillance() {
 
   // جلب إحصائيات النظام كل 2 ثانية
   useEffect(() => {
-        const fetchSystemStats = async () => {
+    const fetchSystemStats = async () => {
       try {
         const data = await apiService.getJson("/api/system/stats");
         setSystemStats(data);
       } catch (error) {
         console.warn("Failed to fetch system stats:", error);
-          // محا��اة البيانات في حالة عدم توفر API
-          setSystemStats({
-            cpu: Math.random() * 100,
-            memory: Math.random() * 100,
-            disk: Math.random() * 100,
-            network: Math.random() * 100,
-          });
-        }
-      } catch (error) {
         // محاكاة البيانات في حالة الخطأ
         setSystemStats({
           cpu: Math.random() * 100,
