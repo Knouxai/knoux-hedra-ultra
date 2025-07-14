@@ -7,7 +7,7 @@ import { createServer } from "./server/index";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 3000,
   },
   build: {
     outDir: "dist/spa",
