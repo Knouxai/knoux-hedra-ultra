@@ -54,39 +54,40 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/language-settings" element={<LanguageSettings />} />
 
-          {/* 7 Main Cyber Modules */}
-          <Route path="/defensive-ops" element={<DefensiveOps />} />
-          <Route path="/offensive-tools" element={<OffensiveTools />} />
-          <Route path="/surveillance" element={<Surveillance />} />
-          <Route path="/network-control" element={<NetworkControl />} />
-          <Route path="/ai-assistant" element={<AIAssistant />} />
-          <Route path="/reporting" element={<Reporting />} />
-          <Route path="/cosmic-settings" element={<CosmicSettings />} />
+            {/* 7 Main Cyber Modules */}
+            <Route path="/defensive-ops" element={<DefensiveOps />} />
+            <Route path="/offensive-tools" element={<OffensiveTools />} />
+            <Route path="/surveillance" element={<Surveillance />} />
+            <Route path="/network-control" element={<NetworkControl />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/reporting" element={<Reporting />} />
+            <Route path="/cosmic-settings" element={<CosmicSettings />} />
 
-          {/* Legacy Individual Tools (backwards compatibility) */}
-          <Route path="/serpent-trap" element={<SerpentTrap />} />
-          <Route path="/3d-deterrence" element={<Deterrence3D />} />
-          <Route path="/script-generator" element={<ScriptGenerator />} />
-          <Route path="/vpn-shield" element={<VPNShield />} />
-          <Route path="/system-scanner" element={<SystemScanner />} />
-          <Route path="/ai-sentinel" element={<AISentinel />} />
-          <Route path="/black-room" element={<BlackRoom />} />
-          <Route path="/policy-commander" element={<PolicyCommander />} />
-          <Route path="/code-sniffer" element={<CodeSniffer />} />
-          <Route path="/chat-ops" element={<ChatOps />} />
-          <Route path="/counter-strike" element={<CounterStrike />} />
-          <Route path="/network-watch" element={<NetworkWatch />} />
-          <Route path="/vault-pass" element={<VaultPass />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/alert-system" element={<AlertSystem />} />
-          <Route path="/backup-checker" element={<BackupChecker />} />
+            {/* Legacy Individual Tools (backwards compatibility) */}
+            <Route path="/serpent-trap" element={<SerpentTrap />} />
+            <Route path="/3d-deterrence" element={<Deterrence3D />} />
+            <Route path="/script-generator" element={<ScriptGenerator />} />
+            <Route path="/vpn-shield" element={<VPNShield />} />
+            <Route path="/system-scanner" element={<SystemScanner />} />
+            <Route path="/ai-sentinel" element={<AISentinel />} />
+            <Route path="/black-room" element={<BlackRoom />} />
+            <Route path="/policy-commander" element={<PolicyCommander />} />
+            <Route path="/code-sniffer" element={<CodeSniffer />} />
+            <Route path="/chat-ops" element={<ChatOps />} />
+            <Route path="/counter-strike" element={<CounterStrike />} />
+            <Route path="/network-watch" element={<NetworkWatch />} />
+            <Route path="/vault-pass" element={<VaultPass />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/alert-system" element={<AlertSystem />} />
+            <Route path="/backup-checker" element={<BackupChecker />} />
 
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 
