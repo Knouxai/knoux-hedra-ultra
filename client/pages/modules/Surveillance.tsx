@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import WatchButton from "../../components/WatchButton";
 import ProgressBar from "../../components/ProgressBar";
+import { apiService } from "@/services/ApiService";
 
 interface SystemStats {
   cpu: number;
@@ -120,20 +121,10 @@ export default function Surveillance() {
   useEffect(() => {
     const fetchSystemStats = async () => {
       try {
-        const response = await fetch("/api/system/stats");
-        if (response.ok) {
-          const data = await response.json();
-          setSystemStats(data);
-        } else {
-          // محا��اة البيانات في حالة عدم توفر API
-          setSystemStats({
-            cpu: Math.random() * 100,
-            memory: Math.random() * 100,
-            disk: Math.random() * 100,
-            network: Math.random() * 100,
-          });
-        }
+        const data = await apiService.getJson("/api/system/stats");
+        setSystemStats(data);
       } catch (error) {
+        console.warn("Failed to fetch system stats:", error);
         // محاكاة البيانات في حالة الخطأ
         setSystemStats({
           cpu: Math.random() * 100,
@@ -153,11 +144,8 @@ export default function Surveillance() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch("/api/logs/surveillance");
-        if (response.ok) {
-          const data = await response.json();
-          setSurveillanceLogs(data);
-        }
+        const data = await apiService.getJson("/api/logs/surveillance");
+        setSurveillanceLogs(data);
       } catch (error) {
         // محاكاة اللوجات
         const mockLog: SurveillanceLog = {
@@ -177,9 +165,7 @@ export default function Surveillance() {
   const startAllMonitoring = async () => {
     setIsMonitoringAll(true);
     try {
-      const response = await fetch("/api/surveillance/start-all", {
-        method: "POST",
-      });
+      const response = await apiService.post("/api/surveillance/start-all");
       if (response.ok) {
         // تحديث حالة جميع الأدوات
         const newStatuses: ToolStatus = {};

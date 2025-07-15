@@ -15,10 +15,14 @@ import {
   RotateCcw,
   Download,
   Upload,
+  Globe,
 } from "lucide-react";
 import type { Section, LiveStats, DatabaseStructure } from "@shared/types";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { apiService } from "@/services/ApiService";
 
 export default function Index() {
+  const { t, language, isRTL } = useLanguage();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLiveMode, setIsLiveMode] = useState(true);
   const [selectedSection, setSelectedSection] = useState(0);
@@ -128,23 +132,11 @@ export default function Index() {
   // Execute tool function
   const executeTool = async (toolId: string, sectionId: number) => {
     try {
-      const response = await fetch("/api/execute-tool", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          toolId,
-          sectionId,
-          async: true,
-        }),
+      const result = await apiService.postJson("/api/execute-tool", {
+        toolId,
+        sectionId,
+        async: true,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to execute tool");
-      }
-
-      const result = await response.json();
       console.log("Tool execution started:", result);
 
       // Update live stats to show tool execution
@@ -253,10 +245,14 @@ export default function Index() {
                 >
                   KNOUX7
                 </h1>
-                <div className="flex items-center gap-2 mt-1">
+                <div
+                  className={`flex items-center gap-2 mt-1 ${isRTL ? "flex-row-reverse" : ""}`}
+                >
                   <span className="text-cyan-400/60 text-sm">.....</span>
                   <span className="text-cyan-400 text-sm font-medium tracking-widest">
-                    INTELLIGENT DEVELOPMENT
+                    {language === "ar"
+                      ? "التطوير الذكي"
+                      : "INTELLIGENT DEVELOPMENT"}
                   </span>
                   <span className="text-cyan-400/60 text-sm">.....</span>
                 </div>
@@ -269,6 +265,13 @@ export default function Index() {
                 {currentTime.toLocaleTimeString()}
               </div>
               <div className="flex items-center gap-2">
+                <Link
+                  to="/language-settings"
+                  className="p-2 rounded-lg border border-purple-400/30 bg-purple-400/10 text-purple-400 hover:border-purple-400 transition-all"
+                  title={t("nav.language_settings")}
+                >
+                  <Globe className="w-4 h-4" />
+                </Link>
                 <button
                   onClick={() => setIsLiveMode(!isLiveMode)}
                   className={`p-2 rounded-lg border transition-all ${
@@ -302,19 +305,23 @@ export default function Index() {
       {/* Top status bar */}
       <div className="absolute top-4 right-6 z-40 flex items-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <span className="text-cyan-400">active systems</span>
+          <span className="text-cyan-400">{t("dashboard.active_systems")}</span>
           <span className="text-cyan-400 font-bold text-lg">
             {liveStats.activeSystems}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-yellow-400">total warnings</span>
+          <span className="text-yellow-400">
+            {t("dashboard.total_warnings")}
+          </span>
           <span className="text-yellow-400 font-bold text-lg">
             {liveStats.totalWarnings}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-cyan-400">system integration</span>
+          <span className="text-cyan-400">
+            {t("dashboard.system_integration")}
+          </span>
           <span className="text-cyan-400 font-bold text-lg">
             {liveStats.systemIntegration.toFixed(1)}%
           </span>
@@ -562,18 +569,31 @@ export default function Index() {
                       )}
                     </div>
 
-                    <Link
-                      to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/[^\w]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}`}
-                      className="w-full mt-4 p-3 rounded-lg border-2 text-center font-bold transition-all hover:scale-105 block"
-                      style={{
-                        borderColor: sections[selectedSection].color,
-                        color: sections[selectedSection].color,
-                        backgroundColor: sections[selectedSection].color + "10",
-                      }}
-                    >
-                      Launch Module ({sections[selectedSection].tools.length}{" "}
-                      tools)
-                    </Link>
+                    <div className="space-y-2 mt-4">
+                      <Link
+                        to={`/${sections[selectedSection].nameEn.toLowerCase().replace(/[^\w]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")}`}
+                        className="w-full p-3 rounded-lg border-2 text-center font-bold transition-all hover:scale-105 block"
+                        style={{
+                          borderColor: sections[selectedSection].color,
+                          color: sections[selectedSection].color,
+                          backgroundColor:
+                            sections[selectedSection].color + "10",
+                        }}
+                      >
+                        Launch Module ({sections[selectedSection].tools.length}{" "}
+                        tools)
+                      </Link>
+
+                      {sections[selectedSection]?.nameEn ===
+                        "Defensive Ops" && (
+                        <Link
+                          to="/defensive-ops-enhanced"
+                          className="w-full p-2 rounded-lg border border-purple-400/50 text-center text-sm transition-all hover:border-purple-400 hover:bg-purple-400/10 block text-purple-400"
+                        >
+                          🚀 Try Enhanced Version (New!)
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

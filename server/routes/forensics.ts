@@ -5,7 +5,15 @@ import ForensicsService from "../services/ForensicsService";
 import { authenticate, authorize } from "../middleware/SecurityMiddleware";
 
 const router = express.Router();
-const forensicsService = new ForensicsService();
+let forensicsService: ForensicsService | null = null;
+
+// Lazy initialization of ForensicsService
+function getForensicsService(): ForensicsService {
+  if (!forensicsService) {
+    forensicsService = new ForensicsService();
+  }
+  return forensicsService;
+}
 
 // إعداد multer لرفع الملفات
 const storage = multer.diskStorage({
@@ -40,7 +48,7 @@ router.get(
   authorize("forensics.view"),
   (req, res) => {
     try {
-      const cases = forensicsService.getAllCases();
+      const cases = getForensicsService().getAllCases();
 
       // تصفية البيانات الحساسة حسب الصلاحيات
       const filteredCases = cases.map((case_) => ({

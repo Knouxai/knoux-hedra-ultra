@@ -101,6 +101,15 @@ class WebSocketService {
         this.sendSystemStats(socket);
       });
 
+      // معالجة تنفيذ الأدوات
+      socket.on("execute_tool", (data) => {
+        this.handleToolExecution(socket, data);
+      });
+
+      socket.on("stop_tool", (data) => {
+        this.handleStopTool(socket, data);
+      });
+
       socket.on("disconnect", () => {
         console.log(`Client disconnected: ${socket.id}`);
         this.connectedClients.delete(socket.id);
@@ -147,6 +156,205 @@ class WebSocketService {
     if (severity) {
       socket.join(`severity:${severity}`);
     }
+  }
+
+  // معالجة تنفيذ الأدوات
+  private async handleToolExecution(socket: Socket, data: any): Promise<void> {
+    const { toolId, sectionId, options = {} } = data;
+    const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    try {
+      // إرسال بداية التنفيذ
+      socket.emit("tool_execution_started", {
+        executionId,
+        toolId,
+        sectionId,
+        timestamp: new Date().toISOString(),
+      });
+
+      // تنفيذ الأداة
+      await this.executeToolCommand(
+        socket,
+        executionId,
+        toolId,
+        sectionId,
+        options,
+      );
+    } catch (error) {
+      console.error(`Error executing tool ${toolId}:`, error);
+      socket.emit("tool_execution_failed", {
+        executionId,
+        toolId,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  // تنفيذ أمر الأداة
+  private async executeToolCommand(
+    socket: Socket,
+    executionId: string,
+    toolId: string,
+    sectionId: number,
+    options: any,
+  ): Promise<void> {
+    // محاكاة تنفيذ مختلف حسب نوع الأداة
+    const toolCommands = {
+      // أدوات دفاعية
+      def_001: "Get-Service | Where-Object {$_.Status -eq 'Running'}",
+      def_002: "netstat -an | findstr LISTENING",
+      def_003: "Get-Process | Sort-Object CPU -Descending",
+      def_004: "Get-MpThreatDetection",
+      def_005: "Get-LocalUser",
+      def_006: "Get-ChildItem -Recurse -File",
+      def_007: "Get-WinEvent -FilterHashtable @{LogName='Security'}",
+
+      // أدوات هجومية
+      off_001: "nmap -sV -sC target_ip",
+      off_002: "netsh trace start capture=yes",
+      off_003: "script-generator.exe --type=payload",
+
+      // أدوات مراقبة
+      sur_001: "Get-Counter '\\System\\*'",
+      sur_002: "netstat -b -n 1",
+      sur_003: "Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4663}",
+    };
+
+    const command = toolCommands[toolId] || "echo 'Tool executed successfully'";
+
+    // إرسال تحديث التقدم
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 15 + 5;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(progressInterval);
+      }
+
+      socket.emit("tool_execution_progress", {
+        executionId,
+        toolId,
+        progress: Math.min(progress, 100),
+        timestamp: new Date().toISOString(),
+      });
+
+      // إرسال سجلات تدريجية
+      if (progress > 25 && progress < 30) {
+        socket.emit("tool_execution_log", {
+          executionId,
+          toolId,
+          level: "info",
+          message: "Initializing security protocols...",
+          timestamp: new Date().toISOString(),
+        });
+      } else if (progress > 50 && progress < 55) {
+        socket.emit("tool_execution_log", {
+          executionId,
+          toolId,
+          level: "success",
+          message: "Security scan in progress...",
+          timestamp: new Date().toISOString(),
+        });
+      } else if (progress > 75 && progress < 80) {
+        socket.emit("tool_execution_log", {
+          executionId,
+          toolId,
+          level: "info",
+          message: "Analyzing results...",
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      if (progress >= 100) {
+        // إرسال النتائج الن��ائية
+        const result = this.generateToolResult(toolId);
+        socket.emit("tool_execution_completed", {
+          executionId,
+          toolId,
+          result,
+          duration: 3000 + Math.random() * 7000, // 3-10 ثوان
+          timestamp: new Date().toISOString(),
+        });
+
+        socket.emit("tool_execution_log", {
+          executionId,
+          toolId,
+          level: "success",
+          message: "Tool execution completed successfully",
+          timestamp: new Date().toISOString(),
+        });
+      }
+    }, 200);
+  }
+
+  // توليد نتائج الأدوات
+  private generateToolResult(toolId: string): any {
+    const results = {
+      def_001: [
+        { service: "Windows Security", status: "Running", pid: 1234 },
+        { service: "Windows Defender", status: "Running", pid: 5678 },
+        { service: "System Guard", status: "Running", pid: 9012 },
+        { service: "Knox Sentinel", status: "Running", pid: 3456 },
+      ],
+      def_002: [
+        { port: 80, protocol: "TCP", status: "LISTENING", process: "httpd" },
+        { port: 443, protocol: "TCP", status: "LISTENING", process: "httpd" },
+        { port: 22, protocol: "TCP", status: "LISTENING", process: "sshd" },
+        { port: 3389, protocol: "TCP", status: "LISTENING", process: "rdp" },
+      ],
+      def_003: [
+        { name: "chrome.exe", cpu: 15.2, memory: "256 MB", pid: 1234 },
+        { name: "system", cpu: 8.1, memory: "128 MB", pid: 4 },
+        { name: "node.exe", cpu: 5.3, memory: "95 MB", pid: 8976 },
+      ],
+      def_004: {
+        threats_detected: 0,
+        files_scanned: 12847,
+        quarantined: 0,
+        last_scan: new Date().toISOString(),
+        definition_version: "1.403.1234.0",
+      },
+      off_001: {
+        target: "192.168.1.100",
+        open_ports: [22, 80, 443, 3389],
+        os_detection: "Windows 10 Professional",
+        services: ["SSH", "HTTP", "HTTPS", "RDP"],
+        vulnerabilities: 2,
+      },
+      sur_001: {
+        cpu_usage: 15.4,
+        memory_usage: 68.2,
+        disk_io: 23.1,
+        network_io: 5.8,
+        active_connections: 247,
+      },
+    };
+
+    return (
+      results[toolId] || {
+        status: "success",
+        message: `Tool ${toolId} executed successfully`,
+        timestamp: new Date().toISOString(),
+      }
+    );
+  }
+
+  // إيقاف تنفيذ أداة
+  private handleStopTool(socket: Socket, data: any): void {
+    const { executionId } = data;
+
+    socket.emit("tool_execution_stopped", {
+      executionId,
+      timestamp: new Date().toISOString(),
+    });
+
+    socket.emit("tool_execution_log", {
+      executionId,
+      level: "warning",
+      message: "Tool execution stopped by user",
+      timestamp: new Date().toISOString(),
+    });
 
     console.log(
       `Client ${socket.id} subscribed to alerts:`,

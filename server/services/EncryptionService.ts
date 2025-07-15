@@ -90,7 +90,7 @@ class EncryptionService {
       salt,
     );
 
-    // حفظ المفتاح المشفر
+    // حفظ ال��فتاح المشفر
     const masterKeyPath = path.join(process.cwd(), ".encryption", "master.key");
     const masterKeyDir = path.dirname(masterKeyPath);
 
@@ -136,7 +136,7 @@ class EncryptionService {
 
         console.log(`✅ Loaded ${this.keyPairs.size} key pairs`);
       } else {
-        // إنشاء زوج مفاتيح افتراضي
+        // إنشاء ز��ج مفاتيح افتراضي
         this.generateRSAKeyPair("default");
       }
     } catch (error) {
@@ -160,8 +160,11 @@ class EncryptionService {
       : this.masterKey;
 
     const iv = crypto.randomBytes(this.config.ivLength);
-    const cipher = crypto.createCipher(this.config.algorithm, encryptionKey);
-    cipher.setAutoPadding(true);
+    const cipher = crypto.createCipheriv(
+      this.config.algorithm,
+      encryptionKey,
+      iv,
+    );
 
     let encrypted = cipher.update(data, "utf8", "base64");
     encrypted += cipher.final("base64");
@@ -182,7 +185,7 @@ class EncryptionService {
     return result;
   }
 
-  // فك تشفير البيانات
+  // فك تشفير الب��انات
   public decrypt(encryptedData: EncryptedData, additionalKey?: string): string {
     if (!this.masterKey) {
       throw new Error("Master key not initialized");
@@ -196,9 +199,11 @@ class EncryptionService {
           )
         : this.masterKey;
 
-      const decipher = crypto.createDecipher(
+      const iv = Buffer.from(encryptedData.iv, "base64");
+      const decipher = crypto.createDecipheriv(
         encryptedData.algorithm,
         encryptionKey,
+        iv,
       );
 
       if (encryptedData.tag) {
@@ -236,9 +241,10 @@ class EncryptionService {
         }
 
         const iv = crypto.randomBytes(this.config.ivLength);
-        const cipher = crypto.createCipher(
+        const cipher = crypto.createCipheriv(
           this.config.algorithm,
           encryptionKey,
+          iv,
         );
 
         const input = fs.createReadStream(inputPath);
@@ -269,7 +275,7 @@ class EncryptionService {
     outputPath: string,
     password?: string,
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const encryptionKey = password
           ? this.deriveKeyFromPassword(
@@ -284,14 +290,25 @@ class EncryptionService {
 
         const input = fs.createReadStream(inputPath);
         const output = fs.createWriteStream(outputPath);
+        const iv = Buffer.alloc(this.config.ivLength);
 
         // قراءة IV من بداية الملف
-        const iv = Buffer.alloc(this.config.ivLength);
-        input.read(this.config.ivLength);
+        await new Promise((resolve, reject) => {
+          input.once("readable", () => {
+            const chunk = input.read(this.config.ivLength);
+            if (chunk) {
+              chunk.copy(iv);
+              resolve(void 0);
+            } else {
+              reject(new Error("Cannot read IV from file"));
+            }
+          });
+        });
 
-        const decipher = crypto.createDecipher(
+        const decipher = crypto.createDecipheriv(
           this.config.algorithm,
           encryptionKey,
+          iv,
         );
 
         input.pipe(decipher).pipe(output);
@@ -375,10 +392,9 @@ class EncryptionService {
     const dataHash = crypto.createHash("sha256").update(data).digest("hex");
 
     // إنشاء التوقيع
-    const signature = crypto
-      .sign("sha256", Buffer.from(data))
-      .update(data)
-      .sign(keyPair.privateKey, "base64");
+    const signer = crypto.createSign("sha256");
+    signer.update(data);
+    const signature = signer.sign(keyPair.privateKey, "base64");
 
     return {
       signature,
